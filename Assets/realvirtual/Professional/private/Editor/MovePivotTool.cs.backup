@@ -1,0 +1,732 @@
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using MathNet.Numerics;
+using UnityEditor;
+using UnityEngine;
+
+
+
+namespace realvirtual
+{
+#pragma warning disable 0414
+    [InitializeOnLoad]
+    //! Class to handle the creation of the realvirtual menu
+    public class MovePivotTool : EditorWindow 
+    {
+        private static Vector3 Point1; 
+        private static Vector3 Point2;
+        private static Vector3 Point3;
+        private static List<Vector3> points = new List<Vector3>();
+        private static Vector3 centerpoint=Vector3.zero;
+        private static Vector3 normal=Vector3.zero;
+        private static Vector3 MiddleP1P2=Vector3.zero;
+        private Vector2 scrollPos;
+        private static string currentSelection;
+        private string drawGizmo = "";
+        private static bool Point1Selected = false;
+        private static bool Point2Selected = false;
+        private static bool Point3Selected = false;
+        private static Color activeButtonColor = new Color(0.87f, 0.3f, 0.49f, 1f);
+        private static Color ButtonColor = new Color(0.35f,0.35f,0.35f,1f);
+        private static int scaleUnit = 1;
+        private static bool useScaleUnit = false;
+        
+        private static GameObject pivotObject;
+        private static GameObject pivotObject2;
+        private static Vector3 oldPivotObject1;
+        private static Quaternion oldRotationObject1;
+        private static Vector3 oldPivotObject2;
+        private static Quaternion oldRotationObject2;
+
+        private static GameObject lastmovedObj=null;
+        private static Vector3 lastpos;
+        private static Quaternion lastrot;
+        
+        private static meshGizmo hoveredMeshGizmo;
+        private static meshGizmo firstSelectedMeshGizmo;
+        private static meshGizmo secondSelectedMeshGizmo;
+        private static List<GameObject> currentMeshes;
+        private static Color MeshGizmoColBeforeHover;
+        private static EditorGizmoOptions EditorGizmoOptions;
+        
+        public static bool select = false;
+        private GUIStyle horizontalLineStyle;
+        
+        private static float handleScaleFactor = 0.05f;
+        
+        [MenuItem("realvirtual/Move Pivot", false, 400)]
+        public static void Init()
+        {
+            SceneView.duringSceneGui += OnSceneGUI;
+            MovePivotTool tool =
+             (MovePivotTool) EditorWindow.GetWindow(typeof(MovePivotTool));
+            tool.titleContent = new GUIContent("Move Pivot");
+            tool.minSize = new Vector2(230, 250);
+            tool.Show();
+            currentMeshes = new List<GameObject>();
+            pivotObject = null;
+            pivotObject2 = null;
+            if (Global.g4acontrollernotnull)
+            {
+                EditorGizmoOptions = Global.realvirtualcontroller.GetGizmoOptions();
+                Global.realvirtualcontroller.ResetSelectedMeshes();
+            }
+            if(Selection.activeGameObject!= null)
+            {
+                pivotObject = Selection.activeGameObject;
+                oldPivotObject1 = pivotObject.transform.position;
+                oldRotationObject1 = pivotObject.transform.rotation;
+                if (Global.realvirtualcontroller != null)
+                {
+                    
+                    Global.realvirtualcontroller.ResetSelectedMeshes();
+                    var filter = pivotObject.GetComponent<MeshFilter>();
+                    firstSelectedMeshGizmo=Global.realvirtualcontroller.signalGizmoMesh(pivotObject,Global.CalculateHandleSize(pivotObject.transform.position,handleScaleFactor)*10,EditorGizmoOptions.FirstSelectedMeshColor,true,false);
+                    if(firstSelectedMeshGizmo.meshFilterList!=null)
+                        currentMeshes.Add(pivotObject);
+                }
+            }
+        }
+        void OnGUI()
+        {
+#if UNITY_EDITOR
+            
+            #region GUIStyles
+           
+            GUIStyle Headlines = new GUIStyle(EditorStyles.boldLabel);
+            // activeButtonColor is already initialized in the field declaration
+            
+            #endregion
+            
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
+            float width = position.width;
+            GUILayout.BeginVertical();
+            GUILayout.Width(10);
+            GUILayout.EndVertical();
+
+            var selected = Selection.objects.Count();
+            EditorGUILayout.Separator();
+            EditorGUILayout.BeginHorizontal();
+            var oldColor = GUI.backgroundColor;
+            if (currentSelection == "Select Object1")
+                GUI.backgroundColor = activeButtonColor;
+            if (GUILayout.Button("Select Object1", GUILayout.Width((width / 3) - 10)))
+            {
+                currentSelection = "Select Object1";
+                select = true;
+                if (pivotObject != null)
+                {
+                    if (points.Contains(pivotObject.transform.position))
+                        points.Remove(pivotObject.transform.position);
+                    if (firstSelectedMeshGizmo != null)
+                    {
+                        Global.realvirtualcontroller.RemoveMeshGizmo(firstSelectedMeshGizmo);
+                        currentMeshes.Remove(firstSelectedMeshGizmo.mainGO);
+                        firstSelectedMeshGizmo = null;
+                    }
+                   ResetHoveredMesh();
+                    pivotObject = null;
+                }
+            }
+            GUI.backgroundColor = oldColor;
+            EditorGUILayout.ObjectField(pivotObject, typeof(GameObject), true);
+            EditorGUILayout.EndHorizontal();
+                
+            EditorGUILayout.Separator();
+            
+            GUILayout.BeginVertical();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Move Object1 to Vertices",Headlines, GUILayout.Width(150));
+                GUILayout.EndHorizontal();
+                
+                EditorGUILayout.Separator();
+                
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup(Point1Selected == false);
+               
+                if(GUILayout.Button("to Point1", GUILayout.Width((width / 3) - 15)))
+                {
+                    StoreLastObjData(pivotObject);
+                    pivotObject.transform.position = Point1;
+                }
+                EditorGUI.EndDisabledGroup();
+                GUILayout.Space(10);
+                EditorGUI.BeginDisabledGroup(Point2Selected == false);
+                if(GUILayout.Button("to Middle Point", GUILayout.Width((width / 3) - 15)))
+                {
+                    if (MiddleP1P2 != Vector3.zero)
+                    {
+                        StoreLastObjData(pivotObject);
+                        pivotObject.transform.position = MiddleP1P2;
+                    }
+                }
+                EditorGUI.EndDisabledGroup();
+                GUILayout.Space(10);
+                EditorGUI.BeginDisabledGroup(Point3Selected == false);
+                if(GUILayout.Button("to Center Point", GUILayout.Width((width / 3) - 15)))
+                {
+                    StoreLastObjData(pivotObject);
+                    pivotObject.transform.position = centerpoint;
+                }
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndHorizontal();
+                
+                EditorGUILayout.Separator();
+                
+                EditorGUILayout.BeginHorizontal();
+                oldColor = GUI.backgroundColor;
+                if (currentSelection == "Select first point")
+                    GUI.backgroundColor = activeButtonColor;
+                if (GUILayout.Button("Point 1", GUILayout.Width((width / 3) - 15)))
+                {
+                    currentSelection = "Select first point";
+                    select = true;
+                    if (points.Contains(Point1))
+                        points.Remove(Point1);
+                    SceneView.duringSceneGui += OnSceneGUI;
+                }
+                GUI.backgroundColor = oldColor;
+                EditorGUILayout.Vector3Field("", Point1);
+                EditorGUILayout.EndHorizontal();
+                
+                EditorGUILayout.Separator();
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup(Point1Selected==false);
+                oldColor = GUI.backgroundColor;
+                if (currentSelection == "Select second point")
+                    GUI.backgroundColor = activeButtonColor;
+                if (GUILayout.Button("Point 2", GUILayout.Width((width / 3) - 15)))
+                {
+                    currentSelection = "Select second point";
+                    select = true;
+                    Point2Selected = true;
+                    if (points.Contains(Point2))
+                        points.Remove(Point2);
+                    SceneView.duringSceneGui += OnSceneGUI;
+                }
+
+                GUI.backgroundColor = oldColor;
+                EditorGUILayout.Vector3Field("", Point2);
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndHorizontal();
+                
+                EditorGUILayout.Separator();
+                
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup( Point2Selected==false);
+                oldColor = GUI.backgroundColor;
+                if (currentSelection == "Select third point")
+                    GUI.backgroundColor = activeButtonColor;
+                if (GUILayout.Button("Point 3", GUILayout.Width((width / 3) - 15)))
+                {
+                    currentSelection = "Select third point";
+                    select = true;
+                    if (points.Contains(Point3))
+                        points.Remove(Point3);
+                    if (points.Contains(centerpoint))
+                        points.Remove(centerpoint);
+                    
+                    SceneView.duringSceneGui += OnSceneGUI;
+                }
+                GUI.backgroundColor = oldColor;
+                EditorGUILayout.Vector3Field("", Point3);
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndHorizontal();
+                
+                EditorGUILayout.Separator();
+                
+                EditorGUILayout.BeginHorizontal();
+                
+                    GUILayout.Box(GUIContent.none, horizontalLineStyle, GUILayout.Width(position.width-20));
+                GUILayout.EndHorizontal();
+                    
+                    GUILayout.BeginHorizontal();
+                        GUILayout.Label("Move Object1 pivot to Object2",Headlines, GUILayout.Width(250));
+                        GUILayout.EndHorizontal();
+                        
+                        EditorGUILayout.Separator();
+                        
+                        EditorGUILayout.BeginHorizontal();
+                        oldColor = GUI.backgroundColor;
+                        if (currentSelection == "Select Object2")
+                            GUI.backgroundColor = activeButtonColor;
+                        if (GUILayout.Button("Select Object2", GUILayout.Width((width / 3) + 10)))
+                        {
+                            currentSelection = "Select Object2";
+                            select = true;
+                            if (pivotObject2 != null)
+                            {
+                                if (points.Contains(pivotObject2.transform.position))
+                                    points.Remove(pivotObject2.transform.position);
+                                pivotObject2 = null;
+                            }
+
+                            if (secondSelectedMeshGizmo != null)
+                            {
+                                Global.realvirtualcontroller.RemoveMeshGizmo(secondSelectedMeshGizmo);
+                                currentMeshes.Remove(secondSelectedMeshGizmo.mainGO);
+                                secondSelectedMeshGizmo = null;
+                            }
+                        }
+                        GUI.backgroundColor = oldColor;
+                        EditorGUILayout.ObjectField(pivotObject2, typeof(GameObject), true);
+                        EditorGUILayout.EndHorizontal();
+                        
+                        EditorGUILayout.Separator();
+                        
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUI.BeginDisabledGroup(pivotObject2==null);
+                        if(GUILayout.Button("Move Object1 to Object2", GUILayout.Width((width / 2) - 15)))
+                        {
+                            StoreLastObjData(pivotObject);
+                            pivotObject.transform.position = pivotObject2.transform.position;
+                        }
+                        GUILayout.Space(10);
+                        if(GUILayout.Button("Align Object1 to Objcect2", GUILayout.Width((width / 2) - 15)))
+                        {
+                            StoreLastObjData(pivotObject);
+                            pivotObject.transform.rotation = pivotObject2.transform.rotation;
+                            pivotObject.transform.position = pivotObject2.transform.position;
+                        }
+                       
+                        GUILayout.EndHorizontal();
+                        
+                        EditorGUILayout.Separator();
+                        
+                        GUILayout.BeginHorizontal();
+                        if(GUILayout.Button("Obj1 Pivot to Obj2 Center", GUILayout.Width((width / 2) - 15)))
+                        {
+                            var mesh = pivotObject2.GetComponent<MeshFilter>().sharedMesh;
+                             if (mesh != null)
+                             {
+                                 StoreLastObjData(pivotObject);
+                                 var bounds = mesh.bounds;
+                                 var center = bounds.center;
+                                 pivotObject.transform.position = pivotObject2.transform.TransformPoint(center);
+                             }
+                        }
+                        EditorGUI.EndDisabledGroup();
+                        GUILayout.EndHorizontal();
+                        
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Box(GUIContent.none, horizontalLineStyle, GUILayout.Width(position.width-20));
+                GUILayout.EndHorizontal();
+                
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Reset", GUILayout.Width((width / 2) - 15)))
+                {
+                    Point1 = Vector3.zero;
+                    Point2 = Vector3.zero;
+                    Point3 = Vector3.zero;
+                    centerpoint = Vector3.zero;
+                    MiddleP1P2 = Vector3.zero;
+                    if(pivotObject!=null)
+                    {
+                        pivotObject.transform.position = oldPivotObject1;
+                        pivotObject.transform.rotation = oldRotationObject1;
+                    }
+                    pivotObject = null;
+                    pivotObject2 = null;
+                    Point1Selected = false;
+                    Point2Selected = false;
+                    Point3Selected = false;
+                    points.Clear();
+                   
+                    if (hoveredMeshGizmo != null)
+                    {
+                        currentMeshes.Remove(hoveredMeshGizmo.mainGO);
+                        Global.realvirtualcontroller.RemoveMeshGizmo(hoveredMeshGizmo);
+                        hoveredMeshGizmo = null;
+                    }
+                    if (secondSelectedMeshGizmo != null)
+                    {
+                        currentMeshes.Remove(secondSelectedMeshGizmo.mainGO);
+                        Global.realvirtualcontroller.RemoveMeshGizmo(secondSelectedMeshGizmo);
+                        secondSelectedMeshGizmo = null;
+                    }
+
+                    if (firstSelectedMeshGizmo != null)
+                    {
+                        currentMeshes.Remove(firstSelectedMeshGizmo.mainGO);
+                        Global.realvirtualcontroller.RemoveMeshGizmo(firstSelectedMeshGizmo);
+                        firstSelectedMeshGizmo = null;
+                    }
+
+                    if (Selection.activeGameObject != null)
+                        Selection.activeGameObject = null;
+                    
+                    currentSelection = "Select Object1";
+                    select = true;
+                    SceneView.duringSceneGui += OnSceneGUI;
+                    var window = GetWindow<MovePivotTool>();
+                    window.Repaint();
+                    
+                }
+                GUILayout.Space(10);
+                EditorGUI.BeginDisabledGroup(lastmovedObj==null);
+                if (GUILayout.Button("Undo", GUILayout.Width((width / 2) - 15)))
+                {
+                   OnUndo();
+                }
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndHorizontal();
+            
+            GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
+#endif
+        }
+        
+        static void OnSceneGUI(SceneView sceneView)
+        {
+            Event current = Event.current;
+            float handleSize = 0.05f;
+            Vector2 mousePos = current.mousePosition;
+            GameObject foundobj;
+            // Point Selection
+            if (select)
+            {
+                bool found = HandleUtility.FindNearestVertex(mousePos, out Vector3 vertex, out foundobj);
+                if (currentSelection != "Select Object1" && currentSelection != "Select Object2")
+                {
+                    if (EditorGizmoOptions != null)
+                        Handles.color = EditorGizmoOptions.DefaultColorSelectionSphere;
+                    else
+                        Handles.color = Color.white;
+                    if (found)
+                    {
+                        handleSize = Global.CalculateHandleSize(vertex,handleScaleFactor);
+                        Handles.SphereHandleCap(0, vertex, Quaternion.identity, handleSize, EventType.Repaint);
+                        Handles.Label(vertex, vertex.ToString());
+                        showHoveredMesh(foundobj);
+                    }
+                    else
+                    {
+                        ResetHoveredMesh();
+                    }
+                    if (current.type == EventType.MouseDown && current.button == 0 && found)
+                    {
+                        if (currentSelection == "Select first point")
+                        {
+                            Point1 = Global.RoundVector(vertex, 3);
+                            points.Add(vertex);
+                            Point1Selected = true;
+                            currentSelection = "";
+                            select = false;
+                            current.Use();
+                        }
+                        else if (currentSelection == "Select second point")
+                        {
+                            Point2 = Global.RoundVector(vertex, 3);
+                            Point2Selected = true;
+                            MiddleP1P2 = Global.RoundVector((Point1 + Point2) / 2, 3);
+                            points.Add(vertex);
+                            points.Add(MiddleP1P2);
+                            currentSelection = "";
+                            select = false;
+                            current.Use();
+                        }
+                        else if (currentSelection == "Select third point")
+                        {
+                            Point3 = Global.RoundVector(vertex, 3);
+                            Point3Selected = true;
+                            centerpoint = Global.CalculateCenterpoint(Point1, Point2, Point3);
+                            normal = Vector3.Cross(Point1 - centerpoint, Point2 - centerpoint);
+                            points.Add(centerpoint);
+                            currentSelection = "";
+                            select = false;
+                        }
+                        ResetHoveredMesh();
+                    }
+                }
+                else
+                {
+                    if (Global.realvirtualcontroller != null)
+                    {
+                        ResetHoveredMesh();
+                        if (found)
+                        {
+                           showHoveredMesh(foundobj);
+                        }
+                    }
+                    if (current.type == EventType.MouseDown && current.button == 0)
+                    {
+                        if (found)
+                        {
+                            if (currentSelection == "Select Object1")
+                            {
+                                SetSelectedMesh(ref firstSelectedMeshGizmo,"pivot1",foundobj,true,false);
+                                select = false;
+                                Tools.current = Tool.Move;
+                            }
+                            if (currentSelection == "Select Object2")
+                            {
+                               SetSelectedMesh(ref secondSelectedMeshGizmo,"pivot2",foundobj,true,true);
+                               select = false;
+                               Tools.current = Tool.Move;
+                            }
+                        }
+                        else
+                        {
+                            ResetHoveredMesh();
+                        }
+                        var window = GetWindow<MovePivotTool>();
+                        window.Repaint();
+                    }
+                }
+            }
+            for (int i = 0; i < points.Count; i++)
+            { 
+                var point = Global.RoundVector(points[i], 3);
+                string label="";
+                if (point == Point1)
+                {
+                    Handles.color = Color.yellow;
+                    label = "Point1";
+                }
+                else if(point == Point2)
+                {
+                    Handles.color = Color.gray;
+                    label = "Point2";
+                }
+                else if(point == MiddleP1P2)
+                {
+                    Handles.color = Color.blue;
+                    label = "MiddlePoint";
+                }
+                else if(point == centerpoint)
+                {
+                    Handles.color = Color.red;
+                    label = "CenterPoint";
+                }
+                else
+                    Handles.color = Color.green;
+                
+                handleSize=Global.CalculateHandleSize(points[i],handleScaleFactor);
+                Handles.SphereHandleCap(0, points[i], Quaternion.identity, handleSize, EventType.Repaint);
+                Handles.Label(points[i], label );
+                if (current.type == EventType.Layout)
+                {
+                     HandleUtility.Repaint();
+                }
+            }
+            if(Point1Selected &&Point2Selected)
+            {
+                Handles.color = Color.green;
+                Handles.DrawLine(Point1, Point1);
+            }
+            if (Point1Selected && Point2Selected && Point3Selected)
+            {
+                Handles.color = Color.blue;
+                Handles.DrawLine(Point1, centerpoint);
+                Handles.DrawLine(Point3, centerpoint);
+                Handles.DrawLine(Point2, centerpoint);
+                Handles.DrawWireDisc(centerpoint, normal, Vector3.Distance(Point1, centerpoint));
+            }
+            if (current.type == EventType.Layout)
+            {
+                HandleUtility.Repaint();
+            }
+            Event currentEvent = Event.current;
+            if (currentEvent.isKey && currentEvent.type == EventType.KeyDown && currentEvent.keyCode == KeyCode.Escape)
+            {
+                select = false;
+                currentSelection = "";
+                var window = GetWindow<MovePivotTool>();
+                window.Repaint();
+            }
+        }
+        void OnUndo()
+        {
+            if (lastmovedObj != null)
+            {
+                lastmovedObj.transform.position = lastpos;
+                lastmovedObj.transform.rotation = lastrot;
+                lastmovedObj = null;
+            }
+        }
+        
+        #region private methods
+        
+        private void Update()
+        {
+            if (Event.current != null && Event.current.type == EventType.ValidateCommand && Event.current.commandName == "UndoRedoPerformed")
+            {
+                OnUndo();
+                Repaint();
+            }
+            
+            if (Selection.activeGameObject != null && Selection.activeGameObject != pivotObject && currentSelection=="Select Object1")
+            {
+                pivotObject = Selection.activeGameObject;
+                ResetHoveredMesh();
+                SetSelectedMesh(ref firstSelectedMeshGizmo,"pivot1",Selection.activeGameObject,true,false);
+                Tools.current = Tool.Move;
+                var window = GetWindow<MovePivotTool>();
+                window.Repaint();
+            }
+            if (Selection.activeGameObject != null && Selection.activeGameObject != pivotObject2 && currentSelection=="Select Object2" && Selection.activeGameObject != pivotObject)
+            {
+                pivotObject2 = Selection.activeGameObject;
+                ResetHoveredMesh();
+                SetSelectedMesh(ref secondSelectedMeshGizmo,"pivot2",Selection.activeGameObject,true,true);
+                Tools.current = Tool.Move;
+                var window = GetWindow<MovePivotTool>();
+                window.Repaint();
+            }
+        }
+        private void OnEnable()
+        {
+            SceneView.duringSceneGui += OnSceneGUI;
+            Undo.undoRedoPerformed += OnUndo;
+            Point1 = Vector3.zero;
+            Point2= Vector3.zero;
+            points.Clear();
+            
+            horizontalLineStyle = new GUIStyle();
+            horizontalLineStyle.normal.background =Global.CreateTexture(Color.gray);
+            horizontalLineStyle.margin = new RectOffset(5, 5, 5, 5);
+            horizontalLineStyle.fixedHeight= 2f;
+        }
+
+        private void OnDisable()
+        {
+           SceneView.duringSceneGui -= OnSceneGUI;
+           Undo.undoRedoPerformed -= OnUndo;
+           currentSelection = "";
+           Point1 = Vector3.zero;
+           Point2= Vector3.zero;
+           
+           points.Clear();
+           Point1Selected = false;
+           Point2Selected = false;
+           Point3Selected = false;
+           select = false;
+           if(Global.realvirtualcontroller!=null)
+                Global.realvirtualcontroller.ResetSelectedMeshes();
+           Tools.current = Tool.Move;
+        }
+
+        private static void showHoveredMesh(GameObject foundobj)
+        {
+            if (EditorGizmoOptions == null)
+                return;
+            
+            Tools.current = Tool.View;
+            var filter = foundobj.GetComponent<MeshFilter>();
+            if (hoveredMeshGizmo != null && foundobj!=hoveredMeshGizmo.mainGO)
+            {
+                if (hoveredMeshGizmo == firstSelectedMeshGizmo)
+                    firstSelectedMeshGizmo.MeshColor =
+                        Global.realvirtualcontroller.EditorGizmoSettings.FirstSelectedMeshColor;
+                else if (hoveredMeshGizmo == secondSelectedMeshGizmo)
+                    secondSelectedMeshGizmo.MeshColor =
+                        Global.realvirtualcontroller.EditorGizmoSettings.SecondSelectedMeshColor;
+                else
+                {
+                    currentMeshes.Remove(hoveredMeshGizmo.mainGO);
+                    Global.realvirtualcontroller.RemoveMeshGizmo(hoveredMeshGizmo);
+                }
+
+                hoveredMeshGizmo = null;
+            }
+            if (!currentMeshes.Contains(foundobj))
+            {
+                hoveredMeshGizmo = Global.realvirtualcontroller.signalGizmoMesh(
+                    foundobj,
+                        Global.CalculateHandleSize(foundobj.transform.position,handleScaleFactor) * 10,
+                        Global.realvirtualcontroller.EditorGizmoSettings.HoverMeshColor,true,false);
+                if(hoveredMeshGizmo.meshFilterList!=null)
+                    currentMeshes.Add(foundobj);
+            }
+            if (firstSelectedMeshGizmo!=null && firstSelectedMeshGizmo.mainGO == foundobj)
+            {
+                firstSelectedMeshGizmo.MeshColor = Global.realvirtualcontroller.EditorGizmoSettings.HoverMeshColor;
+                hoveredMeshGizmo = firstSelectedMeshGizmo;
+            }
+
+            if (secondSelectedMeshGizmo!=null && secondSelectedMeshGizmo.mainGO == foundobj)
+            {
+                secondSelectedMeshGizmo.MeshColor = Global.realvirtualcontroller.EditorGizmoSettings.HoverMeshColor;
+                hoveredMeshGizmo = secondSelectedMeshGizmo;
+            }
+        }
+
+        private static void ResetHoveredMesh()
+        {
+            if(hoveredMeshGizmo!=null )
+                if (hoveredMeshGizmo != firstSelectedMeshGizmo && hoveredMeshGizmo != secondSelectedMeshGizmo)
+                {
+                    currentMeshes.Remove(hoveredMeshGizmo.mainGO);
+                    Global.realvirtualcontroller.RemoveMeshGizmo(hoveredMeshGizmo);
+                    hoveredMeshGizmo = null;
+                }
+        }
+       
+        private static void SetSelectedMesh(ref meshGizmo meshGizmo, string point, GameObject foundGO,bool drawPivot, bool drawCenter)
+        {
+            Color meshColor;
+            if (EditorGizmoOptions == null)
+                EditorGizmoOptions= Global.realvirtualcontroller.GetGizmoOptions();
+            if (point == "pivot1")
+            {
+                pivotObject = foundGO;
+                oldPivotObject1 = foundGO.transform.position;
+                oldRotationObject1 = foundGO.transform.rotation;
+                meshColor = EditorGizmoOptions.FirstSelectedMeshColor;
+            }
+            else
+            {
+                pivotObject2 = foundGO;
+                oldPivotObject2 = foundGO.transform.position;
+                oldRotationObject2 = foundGO.transform.rotation;
+                meshColor = EditorGizmoOptions.SecondSelectedMeshColor;
+            }
+
+            if (meshGizmo != null)
+            {
+                Global.realvirtualcontroller.RemoveMeshGizmo(meshGizmo);
+            }
+            
+            currentSelection = "";
+            select = false;
+          
+            if (hoveredMeshGizmo == null)
+            {
+                meshGizmo=Global.realvirtualcontroller.signalGizmoMesh(pivotObject,Global.CalculateHandleSize(pivotObject.transform.position,handleScaleFactor) * 10,
+                   meshColor,drawPivot,drawCenter);
+                if(!currentMeshes.Contains(foundGO) && meshGizmo.meshFilterList!=null)
+                    currentMeshes.Add(foundGO);
+            }
+            else
+            {
+                if (point == "pivot1")
+                {
+                    Global.realvirtualcontroller.SetMeshGizmoToSelectedMesh(hoveredMeshGizmo, false);
+                }
+                else
+                    Global.realvirtualcontroller.SetMeshGizmoToSelectedMesh(hoveredMeshGizmo, true);
+                meshGizmo = hoveredMeshGizmo;
+                meshGizmo.MeshColor = meshColor;
+                meshGizmo.DrawMeshCenter = drawCenter;
+                meshGizmo.DrawMeshPivot = drawPivot;
+                hoveredMeshGizmo = null;
+            }
+        }
+
+        private static void StoreLastObjData(GameObject obj)
+        {
+            lastmovedObj = obj;
+            lastpos = obj.transform.position;
+            lastrot = obj.transform.rotation;
+        }
+        
+        
+
+        
+        
+        #endregion
+    }
+}

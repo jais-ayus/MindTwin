@@ -1,0 +1,58 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel UpdateVolumeTexture
+#pragma kernel UpdateTimeVolumeTexture
+#pragma kernel ClearVolumeTexture
+
+RWTexture3D<float> _VolumeTexture;
+Texture3D<float> _TmpTexture;
+
+StructuredBuffer<float4x4> _Matrices;
+StructuredBuffer<float3> _LocalGridPositions;
+StructuredBuffer<int> _MatrixIndices;
+
+
+int _MatrixCount;
+int _LocalGridPositionCount;
+int3 _VolumeCapacities;
+float _Resolution;
+float3 _Size;
+float3 _Anchor;
+
+float _DeltaTime;
+
+
+// for volume tracking
+
+[numthreads(1024, 1, 1)]
+void UpdateVolumeTexture (uint3 id : SV_DispatchThreadID)
+{
+    float3 localPosition = _LocalGridPositions[id.x];
+    float4x4 localToWorld = _Matrices[_MatrixIndices[id.x]];
+    float3 worldPosition = mul(localToWorld, float4(localPosition, 1.0f)).xyz;
+    
+    float3 volumePosition = (worldPosition - _Anchor) / _Resolution;
+    uint3 volumePositionInt = uint3(volumePosition);
+
+    _VolumeTexture[volumePositionInt] = 1.0f;
+
+    
+}
+
+
+// for time tracking
+
+[numthreads(8, 8, 8)]
+void UpdateTimeVolumeTexture (uint3 id : SV_DispatchThreadID)
+{
+    _VolumeTexture[id] += _TmpTexture[id]*_DeltaTime;
+}
+
+
+[numthreads(8, 8, 8)]
+void ClearVolumeTexture (uint3 id : SV_DispatchThreadID)
+{
+    _VolumeTexture[id] = 0;
+}
+
+   
+

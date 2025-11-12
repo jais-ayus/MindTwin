@@ -1,0 +1,229 @@
+
+#pragma kernel CSMain
+#pragma kernel AdjustArgs
+#pragma kernel ToRenderMesh
+
+struct Triangle 
+{
+	float3 p1;
+	float3 p2;
+	float3 p3;		
+};
+
+Texture3D<float> _Densities;
+SamplerState sampler_Densities;
+
+StructuredBuffer<Triangle> _MeshBuffer;
+
+
+RWStructuredBuffer<float3> _Vertices;
+
+RWStructuredBuffer<uint> _Indices;
+
+AppendStructuredBuffer<Triangle> _Buffer;
+RWStructuredBuffer<uint> _ArgBuffer;
+
+StructuredBuffer<int> _CubeEdgeFlags;
+StructuredBuffer<int> _TriangleConnectionTable;
+
+float _Target;
+int3 _Offset;
+int3 _Range;
+int3 _Resolution;
+int _N;
+float3 _VoxelSize;
+int _IndexCount;
+int _ReductionFactor;
+float3 _MeshOffset;
+
+
+
+
+// edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
+static int2 edgeConnection[12] =
+{
+	int2(0,1), int2(1,2), int2(2,3), int2(3,0), int2(4,5), int2(5,6), int2(6,7), int2(7,4), int2(0,4), int2(1,5), int2(2,6), int2(3,7)
+};
+
+
+// edgeDirection lists the direction vector (vertex1-vertex0) for each edge in the cube
+static float3 edgeDirection[12] =
+{
+	float3(1.0f, 0.0f, 0.0f),float3(0.0f, 1.0f, 0.0f),float3(-1.0f, 0.0f, 0.0f),float3(0.0f, -1.0f, 0.0f),
+	float3(1.0f, 0.0f, 0.0f),float3(0.0f, 1.0f, 0.0f),float3(-1.0f, 0.0f, 0.0f),float3(0.0f, -1.0f, 0.0f),
+	float3(0.0f, 0.0f, 1.0f),float3(0.0f, 0.0f, 1.0f),float3(0.0f, 0.0f, 1.0f),float3(0.0f,  0.0f, 1.0f)
+};
+
+
+// vertexOffset lists the positions, relative to vertex0, of each of the 8 vertices of a cube
+static float3 vertexOffset[8] =
+{
+	float3(0, 0, 0),float3(1, 0, 0),float3(1, 1, 0),float3(0, 1, 0),
+	float3(0, 0, 1),float3(1, 0, 1),float3(1, 1, 1),float3(0, 1, 1)
+};
+
+
+float SampleDataTexture(float3 pos){
+	float3 uv = pos / (_Resolution);
+    return _Densities.SampleLevel(sampler_Densities, uv, 0);
+}
+
+
+void FillCube(int3 id, out float cube[8])
+{
+	cube[0] = SampleDataTexture((id + float3(0,0,0)* _ReductionFactor));
+	cube[1] = SampleDataTexture((id + float3(1,0,0)* _ReductionFactor));
+	cube[2] = SampleDataTexture((id + float3(1,1,0)* _ReductionFactor));
+	cube[3] = SampleDataTexture((id + float3(0,1,0)* _ReductionFactor));
+	cube[4] = SampleDataTexture((id + float3(0,0,1)* _ReductionFactor));
+	cube[5] = SampleDataTexture((id + float3(1,0,1)* _ReductionFactor));
+	cube[6] = SampleDataTexture((id + float3(1,1,1)* _ReductionFactor));
+	cube[7] = SampleDataTexture((id + float3(0,1,1)* _ReductionFactor));
+}
+
+// GetOffset finds the approximate point of intersection of the surface
+// between two points with the values v1 and v2
+float GetOffset(float v1, float v2)
+{
+	float delta = v2 - v1;
+	return (delta == 0.0f) ? 0.5 : (_Target - v1) / delta;
+}
+
+
+void CreateTriangle(float3 p1, float3 p2, float3 p3)
+{
+	Triangle t;
+
+
+	t.p1 = (p1 - _Offset) * _VoxelSize + _MeshOffset;
+	t.p2 = (p2 - _Offset) * _VoxelSize + _MeshOffset;
+	t.p3 = (p3 - _Offset) * _VoxelSize + _MeshOffset;
+
+	_Buffer.Append(t);
+}
+
+
+
+[numthreads(8, 8, 8)]
+void CSMain(int3 id : SV_DispatchThreadID)
+{
+
+	id.xyz *= _ReductionFactor;
+	
+	if (id.x >= _Range.x) return;
+	if (id.y >= _Range.y) return;
+	if (id.z >= _Range.z) return;
+
+	int3 oid = id.xyz + _Offset;
+
+	//if (oid.x >= _Resolution.x-1) return;
+	//if (oid.y >= _Resolution.y-1) return;
+	//if (oid.z >= _Resolution.z-1) return;
+	
+
+	float cube[8];
+	FillCube(oid, cube);
+
+	int i = 0;
+	int flagIndex = 0;
+	float3 edgeVertex[12];
+
+
+	//Find which vertices are inside of the surface and which are outside
+	for (i = 0; i < 8; i++)
+		if (cube[i] <= _Target) flagIndex |= 1 << i;
+
+
+	//Find which edges are intersected by the surface
+	int edgeFlags = _CubeEdgeFlags[flagIndex];
+
+
+	// no connections, return
+	if (edgeFlags == 0) return;
+
+
+	//Find the point of intersection of the surface with each edge
+	for (i = 0; i < 12; i++)
+	{
+		//if there is an intersection on this edge
+		if ((edgeFlags & (1 << i)) != 0)
+		{
+			float offset = GetOffset(cube[edgeConnection[i].x], cube[edgeConnection[i].y]);
+
+			edgeVertex[i] = oid.xyz + (vertexOffset[edgeConnection[i].x] + offset * edgeDirection[i]) * _ReductionFactor; // scale
+		}
+	}
+
+	
+
+
+	//Save the triangles that were found. There can be up to five per cube
+	for (i = 0; i < 5; i++)
+	{
+		//If the connection table is not -1 then this a triangle.
+		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
+		{
+
+			float3 p1 = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
+			float3 p2 = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
+			float3 p3 = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
+
+			CreateTriangle(p1,p2,p3);
+			
+
+
+
+		}
+	}
+
+}
+
+
+[numthreads(1, 1, 1)]
+void AdjustArgs(int3 id : SV_DispatchThreadID)
+{
+	uint triangleCount = _ArgBuffer[4];
+
+	uint vertexCount = triangleCount * 3;
+	_ArgBuffer[0] = vertexCount; // vertex count per instance
+	_ArgBuffer[1] = 1;           // instance count
+	_ArgBuffer[2] = 0;           // start vertex location
+	_ArgBuffer[3] = 0;           // start instance location
+	_ArgBuffer[4] = triangleCount;
+
+	
+
+	
+
+}
+
+
+
+[numthreads(1024, 1, 1)]
+void ToRenderMesh(uint3 id : SV_DispatchThreadID)
+{
+	if(id.x >= _N){
+		return;
+	}
+
+
+	uint ti = id.x/3;
+	uint pi = id.x - ti*3;
+	
+
+	float3 v;
+	if(pi == 0){
+		v =  _MeshBuffer[ti].p1;
+	}else if(pi == 1){
+		v =  _MeshBuffer[ti].p2;
+	}else{
+		v =  _MeshBuffer[ti].p3;
+	}
+
+	
+
+	_Vertices[id.x] = v;
+	_Indices[id.x] = id.x;
+
+
+}

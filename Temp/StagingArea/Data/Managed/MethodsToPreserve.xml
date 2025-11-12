@@ -1,0 +1,98 @@
+<linker>
+	<assembly fullname="realvirtual.base" ignoreIfMissing="1">
+		<type fullname="realvirtual.ButtonShowGroup">
+			<method name="OnButtonVisibility"/>
+			<method name="OnButtonVisibility"/>
+		</type>
+		<type fullname="realvirtual.Materializer">
+			<method name="SetMaterial"/>
+			<method name="SetMaterial"/>
+		</type>
+		<type fullname="realvirtual.PlayGroupWindow">
+			<method name="OnToolbarButtonClicked"/>
+			<method name="OnToolbarButtonClicked"/>
+		</type>
+		<type fullname="realvirtual.realvirtualController">
+			<method name="BreakTriggeredByStep"/>
+			<method name="ConnectionButtonToggleOff"/>
+			<method name="ConnectionButtonToggleOn"/>
+			<method name="OnUIButtonPressed"/>
+			<method name="OnUIButtonPressed"/>
+			<method name="OnUIButtonPressed"/>
+			<method name="OnUIButtonPressed"/>
+		</type>
+		<type fullname="realvirtual.rvUIColorizer">
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+			<method name="Colorize"/>
+		</type>
+		<type fullname="realvirtual.rvUIToggle">
+			<method name="ToggleOff"/>
+			<method name="ToggleOn"/>
+		</type>
+		<type fullname="realvirtual.SceneMouseNavigation">
+			<method name="OrthographicViewToggleOff"/>
+			<method name="OrthographicViewToggleOn"/>
+			<method name="OrthoOverlayToggleOff"/>
+			<method name="OrthoOverlayToggleOn"/>
+			<method name="ViewButtonToggleOff"/>
+			<method name="ViewButtonToggleOn"/>
+		</type>
+		<type fullname="realvirtual.SettingsWindowCtrl">
+			<method name="OnToolbarButtonClicked"/>
+			<method name="OnToolbarButtonClicked"/>
+		</type>
+		<type fullname="realvirtual.StartCameraPosition">
+			<method name="SetCameraPosition"/>
+			<method name="SetCameraPosition"/>
+			<method name="SetCameraPosition"/>
+			<method name="SetCameraPosition"/>
+		</type>
+		<type fullname="realvirtual.UIGroupElement">
+			<method name="OnButtonVisibility"/>
+			<method name="OnButtonVisibility"/>
+		</type>
+	</assembly>
+	<assembly fullname="Unity.RenderPipelines.Core.Runtime" ignoreIfMissing="1">
+		<type fullname="UnityEngine.Rendering.UI.DebugUIHandlerButton">
+			<method name="OnAction"/>
+		</type>
+		<type fullname="UnityEngine.Rendering.UI.DebugUIHandlerIntField">
+			<method name="OnDecrement"/>
+			<method name="OnDecrement"/>
+			<method name="OnIncrement"/>
+			<method name="OnIncrement"/>
+		</type>
+		<type fullname="UnityEngine.Rendering.UI.DebugUIHandlerObjectPopupField">
+			<method name="OnDecrement"/>
+			<method name="OnIncrement"/>
+		</type>
+		<type fullname="UnityEngine.Rendering.UI.DebugUIHandlerPanel">
+			<method name="OnScrollbarClicked"/>
+			<method name="OnScrollbarClicked"/>
+			<method name="ResetDebugManager"/>
+		</type>
+		<type fullname="UnityEngine.Rendering.UI.DebugUIHandlerUIntField">
+			<method name="OnDecrement"/>
+			<method name="OnDecrement"/>
+			<method name="OnIncrement"/>
+			<method name="OnIncrement"/>
+		</type>
+	</assembly>
+	<assembly fullname="UnityEngine.CoreModule" ignoreIfMissing="1">
+		<type fullname="UnityEngine.Component">
+			<method name="SendMessage"/>
+		</type>
+		<type fullname="UnityEngine.GameObject">
+			<method name="SetActive"/>
+			<method name="SetActive"/>
+			<method name="SetActive"/>
+			<method name="SetActive"/>
+		</type>
+	</assembly>
+</linker>

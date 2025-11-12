@@ -1,0 +1,62 @@
+
+#pragma kernel ToRenderMesh
+
+struct Triangle 
+{
+	float3 p1;
+	float3 p2;
+	float3 p3;		
+};
+
+struct Vertex
+{
+	float3 position;
+	float3 normal;
+	float occlusion;
+};
+
+StructuredBuffer<Triangle> _MeshBuffer;
+RWStructuredBuffer<Vertex> _Vertices;
+RWStructuredBuffer<int> _Indices;
+
+
+int _N;
+
+
+
+
+
+[numthreads(1024, 1, 1)]
+void ToRenderMesh(uint3 id : SV_DispatchThreadID)
+{
+	if(id.x >= _N){
+		return;
+	}
+
+
+	uint ti = id.x/3;
+	uint pi = id.x - ti*3;
+	
+
+	float3 v;
+	if(pi == 0){
+		v =  _MeshBuffer[ti].p1;
+	}else if(pi == 1){
+		v =  _MeshBuffer[ti].p2;
+	}else{
+		v =  _MeshBuffer[ti].p3;
+	}
+
+	Vertex vertex;
+
+	vertex.position = v;
+	vertex.normal = float3(1,0,0);
+	vertex.occlusion = 0.5f;
+
+
+	_Vertices[id.x] = vertex;
+	_Indices[id.x] = id.x;
+
+
+}
+

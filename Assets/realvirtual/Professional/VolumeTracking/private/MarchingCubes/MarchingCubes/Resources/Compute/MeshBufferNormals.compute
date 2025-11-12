@@ -1,0 +1,95 @@
+
+#pragma kernel ComputeNormals
+#pragma kernel UpdateArgs
+
+struct Triangle 
+{
+	float3 p1;
+	float3 p2;
+	float3 p3;		
+};
+
+
+Texture3D<float> _Densities;
+SamplerState sampler_Densities;
+
+RWStructuredBuffer<float3> _NormalBuffer;
+StructuredBuffer<Triangle> _MeshBuffer;
+StructuredBuffer<uint> _MeshArgs;
+RWStructuredBuffer<uint> _Args;
+
+
+int3 _Offset;
+int3 _Range;
+int3 _Resolution;
+float _NormalBias;
+
+
+
+float SampleDataTexture(float3 uv){
+    return _Densities.SampleLevel(sampler_Densities, uv.xyz, 0);
+}
+
+float3 VertToUv(float3 v){
+	float3 uv = (v + _Offset) / (_Resolution);
+	return uv;
+}
+
+float3 SampleNormal(float3 v, float bias){
+
+	float3 uv = VertToUv(v);
+	float3 step = 1.0/_Range;
+	step *= bias;
+
+	float dx = SampleDataTexture(uv - step*float3(1,0,0)) - SampleDataTexture(uv + step*float3(1,0,0));
+	float dy = SampleDataTexture(uv - step*float3(0,1,0)) - SampleDataTexture(uv + step*float3(0,1,0));
+	float dz = SampleDataTexture(uv - step*float3(0,0,1)) - SampleDataTexture(uv + step*float3(0,0,1));
+
+
+	return normalize(float3(dx,dy,dz));
+
+
+}
+
+
+[numthreads(1024, 1, 1)]
+void ComputeNormals(uint3 id : SV_DispatchThreadID)
+{
+	if(id.x >= _MeshArgs[0]){
+		return;
+	}
+
+
+
+	uint ti = id.x/3;
+	uint pi = id.x - ti*3;
+	
+	float3 v;
+	if(pi == 0){
+		v =  _MeshBuffer[ti].p1;
+	}else if(pi == 1){
+		v =  _MeshBuffer[ti].p2;
+	}else{
+		v =  _MeshBuffer[ti].p3;
+	}
+
+	
+	float3 normal = SampleNormal(v, _NormalBias);
+
+	_NormalBuffer[id.x] = normal;
+
+
+}
+
+
+
+[numthreads(1, 1, 1)]
+void UpdateArgs(uint3 id : SV_DispatchThreadID)
+{
+	_Args[0] = _MeshArgs[0] / 1024 + 1;
+	_Args[1] = 1;
+	_Args[2] = 1;
+
+
+}
+

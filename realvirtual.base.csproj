@@ -1,0 +1,1635 @@
+﻿<Project ToolsVersion="Current">
+  <!-- Generated file, do not modify, your changes will be overwritten (use AssetPostprocessor.OnGeneratedCSProject) -->
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>Temp\obj\$(Configuration)\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <ProjectCapability Include="Unity" />
+  </ItemGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <LangVersion>9.0</LangVersion>
+    <Configurations>Debug;Release</Configurations>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <RootNamespace></RootNamespace>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>realvirtual.base</AssemblyName>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <BaseDirectory>.</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\bin\Debug\</OutputPath>
+    <DefineConstants>UNITY_2022_3_62;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CLOTH;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_WEBGL;TEXTCORE_1_0_OR_NEWER;UNITY_WEBGL;UNITY_WEBGL_API;UNITY_DISABLE_WEB_VERIFICATION;UNITY_GFX_USE_PLATFORM_VSYNC;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_SPATIALTRACKING;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169;USG0001</NoWarn>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Temp\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169;USG0001</NoWarn>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoStandardLibraries>true</NoStandardLibraries>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UnityProjectGenerator>Package</UnityProjectGenerator>
+    <UnityProjectGeneratorVersion>2.0.22</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorStyle>SDK</UnityProjectGeneratorStyle>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>WebGL:20</UnityBuildTarget>
+    <UnityVersion>2022.3.62f1</UnityVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
+    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\realvirtual\Professional\Statistics\StatDisplay.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\PLC_BoxConveyor.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsShortByteString.cs" />
+    <Compile Include="Assets\realvirtual\private\IBeforeAwake.cs" />
+    <Compile Include="Assets\realvirtual\Professional\PerformanceOptimizer.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_WaitForSignalBool.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\VirtualCameraController.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUISearchbar.cs" />
+    <Compile Include="Assets\realvirtual\private\StaticTools\ConnectionState.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffSimpleValueRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIToggle.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Scripts\RenderPipelineShaderMapping.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Color.cs" />
+    <Compile Include="Assets\realvirtual\private\SinkEvent.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\InterfaceThreadedBaseClass.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlNamespaces.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCInputInt.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\PathChain.cs" />
+    <Compile Include="Assets\realvirtual\TransportGuided.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffMulRKCell.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_WaitForDrivesAtTarget.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\EncryptionInfo.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffRecord.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StartDriveSpeed.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\ToggleButton.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\Editor\StatStatesEditor.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StatOutput.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\SCurveGenerator7Segment.cs" />
+    <Compile Include="Assets\realvirtual\private\PlannerAttributes.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\Spline.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIInputField.cs" />
+    <Compile Include="Assets\realvirtual\private\BehaviorInterface.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\ExponentialSection.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\ButtonEvent.cs" />
+    <Compile Include="Assets\realvirtual\private\IAllScenesLoaded.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\InterfaceSignal.cs" />
+    <Compile Include="Assets\realvirtual\private\EnvironmentSetup.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\ColorField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\SettingsController.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Skins\SkinController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Resources\Icons\HMIModeInterface.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CADUpdater\CADUpdater.cs" />
+    <Compile Include="Assets\realvirtual\Professional\KinematicMU\KinematicMU.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XlsxSST.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelBinaryReader.cs" />
+    <Compile Include="Assets\realvirtual\private\DebugWriteAwakeEnableStart.cs" />
+    <Compile Include="Assets\realvirtual\Lamp_Connection.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\StreamExtensions.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsShortUnicodeString.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\EnumField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\DecimalField.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCInputFloat.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimePersistenceAttributes.cs" />
+    <Compile Include="Assets\realvirtual\Professional\ModelZoo\private\SearchbarFilterScenes.cs" />
+    <Compile Include="Assets\realvirtual\private\ITestCheck.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\IExcelDataReader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SharedStringRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffFilePass.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_TabButton.cs" />
+    <Compile Include="Assets\realvirtual\ResetSignal.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Parser.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\RowHeaderRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Editor\SplineAnchorEditor.cs" />
+    <Compile Include="Assets\realvirtual\private\IRaycaster.cs" />
+    <Compile Include="Assets\realvirtual\private\IInitEnable.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Skins\SkinToggleChanged.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\AssemblyInfo.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\StatStates.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\StatOutput.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelCsvReader.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_Enable.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Section.cs" />
+    <Compile Include="Assets\realvirtual\Drive_Simple.cs" />
+    <Compile Include="Assets\realvirtual\private\ISceneLoaded.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\Vertex.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\TextTimer.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\PLC_Handling.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\RecycledListView\IListViewAdapter.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\MeshBufferNormals.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Math\SymmetricMatrix.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\ConveyorBelt\ConveyorBelt.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\ArrayField.cs" />
+    <Compile Include="Assets\realvirtual\private\StaticTools\Logger.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\DraggedReferenceItem.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyItem.cs" />
+    <Compile Include="Assets\realvirtual\MoveMU.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffHeaderFooterString.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Utilities\SplineControlledParticleSystem.cs" />
+    <Compile Include="Assets\realvirtual\private\SignalTrace.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffMergeCells.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\XorManaged.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Skin\SkinUtils.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BuiltinNumberFormat.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\UIWindowMovement.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\WindowController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\MeshCombiner.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\Helpers.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Value.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\Signal.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\ReferenceHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\SceneInfoWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CommonWorkbook.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvSceneDescriptions.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\VariableSet.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\PLC_CanConveyor.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\StringHelper.cs" />
+    <Compile Include="Assets\realvirtual\Axis.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\EnvironmentUpgrade.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\RuntimeInspectorSettings.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\IntegerField.cs" />
+    <Compile Include="Assets\realvirtual\SignalTracer.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CsvFormat\CsvParser.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshCombiner\MeshCombiner.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SheetFormatPrRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\realvirtualUI.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Demo\StartDemoSceneHMI.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\FractionSection.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\WaitForSensorAction.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\ExtendedFormat.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\EncodingHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\TooltipController.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Misc\DateTimeHelper.cs" />
+    <Compile Include="Assets\realvirtual\Gripper.cs" />
+    <Compile Include="Assets\realvirtual\Chain.cs" />
+    <Compile Include="Assets\realvirtual\private\StaticTools\SceneTools.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffXF.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\MeshSimplifier.cs" />
+    <Compile Include="Assets\realvirtual\private\BasePath.cs" />
+    <Compile Include="Assets\realvirtual\private\ISignalInterface.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlStylesReader.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\SplineAnchor.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseDrive.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Errors.cs" />
+    <Compile Include="Assets\realvirtual\Kinematic.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\StringField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIURLField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\InspectorController.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\SceneButtons\PushButton3D.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\HeaderFooter.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\ExposedMethodField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\InspectorField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ExposedMethod.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SignalManager\AutoConnectBase.cs" />
+    <Compile Include="Assets\realvirtual\private\ISelectable.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\ToolbarLogoButton.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\CellRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelOpenXmlReader.cs" />
+    <Compile Include="Assets\realvirtual\private\SnapPoints\SnapControl.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\IStatReset.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Exceptions\HeaderException.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\DemoGripRobot.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\RecycledListView\RecycledListItem.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffFormatString.cs" />
+    <Compile Include="Assets\realvirtual\Cutter.cs" />
+    <Compile Include="Assets\realvirtual\private\IFix.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffBlankCell.cs" />
+    <Compile Include="Assets\realvirtual\MU.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Components\LODBackupComponent.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsByteString.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIObjectPickerWindow.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StartDriveTo.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffWindow1.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\SignalImporterExporter.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\Vector4Field.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\CellStyleExtendedFormatRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UILamp.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\RenderPipelineTools.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\SettingsWindowCtrl.cs" />
+    <Compile Include="Assets\realvirtual\private\realvirtualPhysics.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Exceptions\ExcelReaderException.cs" />
+    <Compile Include="Assets\realvirtual\UnFixer.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\StandardEncryptedPackageStream.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\BoolField.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\RC4Encryption.cs" />
+    <Compile Include="Assets\realvirtual\private\MathNet\Distribution.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\StatCycleTime.cs" />
+    <Compile Include="Assets\realvirtual\private\realvirtualVersion.cs" />
+    <Compile Include="Assets\realvirtual\private\IInspector.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\MarchingCubesTables.cs" />
+    <Compile Include="Assets\realvirtual\Sink.cs" />
+    <Compile Include="Assets\realvirtual\private\MuRecording.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\MergeCellRecord.cs" />
+    <Compile Include="Assets\realvirtual\StartDriveOnCondition.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_WaitForSensor.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\UIWindow.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\MeshBufferMaterials.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffRow.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\Line.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\NumberFormatRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIColorizer.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\BaseStation.cs" />
+    <Compile Include="Assets\realvirtual\Pattern.cs" />
+    <Compile Include="Assets\realvirtual\RuntimePersistence.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_MenueItem.cs" />
+    <Compile Include="Assets\realvirtual\private\SceneInfo.cs" />
+    <Compile Include="Assets\realvirtual\MaterialChanger.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\Row.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\Floor\FloorSetup.cs" />
+    <Compile Include="Assets\realvirtual\private\ITestPrepare.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffDimensions.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseTransportSurface.cs" />
+    <Compile Include="Assets\realvirtual\private\ControlLogic.cs" />
+    <Compile Include="Assets\realvirtual\private\DrivePulseEncoder.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\Enums.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIButtonClick.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\PLC_Robot.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\MaterialUpgrade.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyRootSearch.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_MouseAreaCtrl.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Exceptions\CompoundDocumentException.cs" />
+    <Compile Include="Assets\realvirtual\MUCounter.cs" />
+    <Compile Include="Assets\realvirtual\private\EnvironmentController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\TestSmoothDrive.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffBOF.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\SectionType.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Log\ILog.cs" />
+    <Compile Include="Assets\realvirtual\private\IGuidedSurface.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\GenericButton.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\NumberFormatString.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\StringHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XlsxWorksheet.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\PathStrategy.cs" />
+    <Compile Include="Assets\realvirtual\private\IPostAllScenesLoaded.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CompoundFormat\CompoundStream.cs" />
+    <Compile Include="Assets\realvirtual\CAMTime.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlProperNamespaces.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\IUItooltip.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\Ref.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIButtonGroup.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffNumberCell.cs" />
+    <Compile Include="Assets\realvirtual\private\IInitAwake.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Tokenizer.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyItemTransform.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\CellStyle.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\DenoisingInstaller.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeNews\Scripts\RuntimeNews.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\RenderPipelineInstaller.cs" />
+    <Compile Include="Assets\realvirtual\Drive_FollowPosition.cs" />
+    <Compile Include="Assets\realvirtual\Grip.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Text.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\SignalEvent.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\ColumnRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\WaitForSignalBoolAction.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\RC4Managed.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\XmlReaderHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\CurveDetail.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Token.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\BoundInputField.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\ScalarTexture3DToSdfTexture3DProcedure\Example\Assets\ScalarTexture3DToSdfTexture3DProcedureExample.cs" />
+    <Compile Include="Assets\realvirtual\Sensor.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Skin\SkinnedWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\SelectionRaycast.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\TouchInteraction.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffBoundSheet.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\ObjectField.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsWorksheet.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseSource.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffMulBlankCell.cs" />
+    <Compile Include="Assets\realvirtual\private\StaticTools\Groups.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCInputBool.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Message.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\UVChannels.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\FirstPersonController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\LODLevel.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\Helpers\HierarchyDragDropListener.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\DraggedReferenceSourceCamera.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\BoundsField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\Vector3Field.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshOptimizer.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\BinaryFormat\BiffReader.cs" />
+    <Compile Include="Assets\realvirtual\private\IChain.cs" />
+    <Compile Include="Assets\realvirtual\private\Tools\ZIP\ZipUtil.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCOutputTransform.cs" />
+    <Compile Include="Assets\realvirtual\CAM.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\SmoothMotionController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Utility\ResizableArray.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Math\MathHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\SceneMouseNavigation.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\ToolbarScaler.cs" />
+    <Compile Include="Assets\realvirtual\UIPrefabs\Scripts\OverlayButtonScaler.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIAutoRowHeight.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIPanelRow.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIObjectField.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyRootScene.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\StartDriveToAction.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\SmoothMotion.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffContinue.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimSelection.cs" />
+    <Compile Include="Assets\realvirtual\private\IInitStart.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\OnValueChangedReconnectInterface.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CollectionBuilder\CollectionObject.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StatStartCycle.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\MarchingCubes.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CompoundFormat\CompoundHeader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\BinaryFormat\BiffSharedStringsReader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\Column.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\LODGenerator.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\IUISkinEdit.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\Curve.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\InterfaceBaseClass.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_DriveTo.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\PathMover.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Editor\SplineTangentEditor.cs" />
+    <Compile Include="Assets\realvirtual\Sound.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffMSODrawing.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Math\Vector3d.cs" />
+    <Compile Include="Assets\realvirtual\SignalChart.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\Arrow.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffSST.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Utility\IOUtils.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffFormulaString.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Editor\RenderPipelineInitializer.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Tab.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_DropDown.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\BlendShape.cs" />
+    <Compile Include="Assets\realvirtual\PartChanger.cs" />
+    <Compile Include="Assets\realvirtual\Grip_SingleIO.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\UIElementResize.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffStream.cs" />
+    <Compile Include="Assets\realvirtual\private\IXRPlaceable.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\MidArrow.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\PanelResizer.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CsvFormat\CsvAnalyzer.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyItemRoot.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Log\LogManager.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\BinaryFormat\BiffWorkbookReader.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\DemoRDKControl.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Slider.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\ISelectNextPath.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsUnicodeString.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCInputText.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffCodeName.cs" />
+    <Compile Include="Assets\realvirtual\private\ModelChecker.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\HeaderFooterRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Log\Log.cs" />
+    <Compile Include="Assets\realvirtual\private\ObjectHighLight.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\Cell.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\CellError.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\InterfaceSHMBaseClass.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIButton.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Utility\MeshUtils.cs" />
+    <Compile Include="Assets\realvirtual\private\Global.cs" />
+    <Compile Include="Assets\realvirtual\DrivesRecorder.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\SceneButtons\SceneButtonMoveable.cs" />
+    <Compile Include="Assets\realvirtual\OnSensorCameraOnMu.cs" />
+    <Compile Include="Assets\realvirtual\UIPrefabs\Scripts\SignalConnection.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsWorkbook.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ObjectReferencePicker\ObjectReferencePickerItem.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Editor\SerializedPropertyExtensions.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\StopDriveAction.cs" />
+    <Compile Include="Assets\realvirtual\MuRecorder.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIMoveToMouse.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffColInfo.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CompoundFormat\CompoundDirectoryEntry.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCOutputText.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\Condition.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\BinaryFormat\BiffStylesReader.cs" />
+    <Compile Include="Assets\realvirtual\ForceDrive.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIScaler.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CollectionBuilder\Editor\CollectionBuilderWindow.cs" />
+    <Compile Include="Assets\realvirtual\Fixer.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUICopySize.cs" />
+    <Compile Include="Assets\realvirtual\private\DrivesRecording.cs" />
+    <Compile Include="Assets\realvirtual\Drive_Speed.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\IWorksheet.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Marker.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseGrip.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_JumpOnSignal.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffRKCell.cs" />
+    <Compile Include="Assets\realvirtual\private\ISourceCreated.cs" />
+    <Compile Include="Assets\realvirtual\private\ReadOnlyAtrribute.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_SerialContainer.cs" />
+    <Compile Include="Assets\realvirtual\Professional\private\MeshCombine.cs" />
+    <Compile Include="Assets\realvirtual\ConnectSignal.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffInterfaceHdr.cs" />
+    <Compile Include="Assets\realvirtual\Drive_ContinousDestination.cs" />
+    <Compile Include="Assets\realvirtual\private\Persistence.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\GroupManager.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCOutputInt.cs" />
+    <Compile Include="Assets\realvirtual\PLCLogics\LogicMove3AxisPickAndPlace.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffLabelCell.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Pushbutton.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\SceneDescriptionComponent.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\Vector2Field.cs" />
+    <Compile Include="Assets\realvirtual\CameraDirector.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIMessageBox.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\MouseAndTouchRaycaster.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Skin\UISkin.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_SetSignalBool.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCInputTransform.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\ZeroOneTransition.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_Delay.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Misc\LeaveOpenStream.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelReaderFactory.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\Helpers\PseudoSceneSourceTransform.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ColorPicker\ColorPickerAlphaSlider.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\SCurveTest.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelDataReaderExtensions.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StatEndCycle.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\PanelReplacer.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\SceneButtons\SceneButtonBase.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Controller.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsInternalString.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\SignalCatcher.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SheetRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\Skins\RealvirtualUISkin.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlWorksheetReader.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\Utilities\Materializer.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIGroupElement.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\ObjectReferenceField.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\StationSensor.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\ScalarTexture3DToSdfTexture3DProcedure\Runtime\ScalarTexture3DToSdfTexture3DProcedure.cs" />
+    <Compile Include="Assets\realvirtual\MeasureForce.cs" />
+    <Compile Include="Assets\realvirtual\private\OrthoViewController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CADUpdater\PixyzImporter.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlSharedStringsReader.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyItemSearchEntry.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\QualityController.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsSSTStringHeader.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\SceneButtons\EmergencyButton3D.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseSensor.cs" />
+    <Compile Include="Assets\realvirtual\Drive_ErraticPosition.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\DeactivateAllOtherInterfaces.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ObjectReferencePicker\ObjectReferencePicker.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\AgileEncryption.cs" />
+    <Compile Include="Assets\realvirtual\Professional\PrefabGenerator\PrefabGenerator.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelReaderConfiguration.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\RecycledListView\RecycledListView.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SignalManager\AutoConnectExample.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\MeshGPU.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelDataReader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\AgileEncryptedPackageStream.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCOutputBool.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\Skyball\SkyBall.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CADUpdater\CAD.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_ContentPosition.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SignalManager\SignalManager.cs" />
+    <Compile Include="Assets\realvirtual\LightGroup.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Log\Logger\NullLogFactory.cs" />
+    <Compile Include="Assets\realvirtual\GuideCircle.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\BinaryFormat\BiffWorksheetReader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelDataSetConfiguration.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\ExtendedFormatRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CompoundFormat\CompoundEnums.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\PointerEventListener.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\StatController.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\BlendShapeFrameContainer.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SheetDataBeginRecord.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\SimplificationOptions.cs" />
+    <Compile Include="Assets\realvirtual\Professional\HMI\Scripts\HMI_Switch.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\BorderVertex.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffFormulaCell.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\WaitForDrivePositionAction.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffIntegerCell.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIPopupWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIWindowSortOrder.cs" />
+    <Compile Include="Assets\realvirtual\private\QuickToggle.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\AssemblyAttributes.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\ExternalResources\ColorWheel\ColorWheelControl.cs" />
+    <Compile Include="Assets\realvirtual\UIPrefabs\Scripts\ButtonShowGroup.cs" />
+    <Compile Include="Assets\realvirtual\Interact3D.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeNews\Scripts\RuntimeNewsElement.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\PLCDemoCNCLoadUnload.cs" />
+    <Compile Include="Assets\realvirtual\private\realvirtualController.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\SplineFollower.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\BezierCurves.cs" />
+    <Compile Include="Assets\realvirtual\Drive_Cylinder.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CsvFormat\CsvWorkbook.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\RuntimeInspectorUtils.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffQuickTip.cs" />
+    <Compile Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Marcher.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\UI.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffFont.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\CryptoHelpers.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\WorkbookPrRecord.cs" />
+    <Compile Include="Assets\realvirtual\Measure.cs" />
+    <Compile Include="Assets\realvirtual\GuidedMU.cs" />
+    <Compile Include="Assets\realvirtual\Drive_MeasureSpeedPosition.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SheetPrRecord.cs" />
+    <Compile Include="Assets\realvirtual\TransportsurfaceCollider.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlWorkbookReader.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\NumberFormat\DecimalSection.cs" />
+    <Compile Include="Assets\realvirtual\Drive_Gear.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_CinemachineCamera.cs" />
+    <Compile Include="Assets\realvirtual\private\BaseCAM.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CsvFormat\CsvWorksheet.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\XorEncryption.cs" />
+    <Compile Include="Assets\realvirtual\MeasureRaycast.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\Triangle.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\RealvirtualTooltip.cs" />
+    <Compile Include="Assets\realvirtual\private\IRobotController.cs" />
+    <Compile Include="Assets\realvirtual\Sensor_Standard.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\IXlsString.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\DriveJogAction.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\Enums.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XlsxWorkbook.cs" />
+    <Compile Include="Assets\realvirtual\private\IChainElement.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\WindowDragHandler.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_ParallelContainer.cs" />
+    <Compile Include="Assets\realvirtual\Professional\SmoothMotion\SCurve.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\XmlFormat\XmlRecordReader.cs" />
+    <Compile Include="Assets\realvirtual\MUSwitcher.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshOptimizerWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIElement.cs" />
+    <Compile Include="Assets\realvirtual\Professional\ModelZoo\private\UISceneElement.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Editor\SplineEditor.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\ZipWorker.cs" />
+    <Compile Include="Assets\realvirtual\ChainUnitySpline.cs" />
+    <Compile Include="Assets\realvirtual\private\IDriveBehavior.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\CompoundFormat\CompoundDocument.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\GameObjectField.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Utilities\SplineRenderer.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\CameraPosition.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIButton.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\QualityToggleChange.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\SimulationStationEvent.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Attributes\RuntimeInspectorButtonAttribute.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsSSTReader.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\private\SimulationPathEvent.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Exceptions\InvalidPasswordException.cs" />
+    <Compile Include="Assets\realvirtual\SimpleJoint.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUIToolbarButton.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Exceptions\ValidateSimplificationOptionsException.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffDefaultRowHeight.cs" />
+    <Compile Include="Assets\realvirtual\private\PathSystem\SimulationPath.cs" />
+    <Compile Include="Assets\realvirtual\Scenes\DataForDemos\Scripts\BuildPerformanceTestModel.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\ExcelDataTableConfiguration.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OfficeCrypto\StandardEncryption.cs" />
+    <Compile Include="Assets\realvirtual\Professional\CollectionBuilder\BuildCollections.cs" />
+    <Compile Include="Assets\realvirtual\TransportSurface.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\SheetDataEndRecord.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ColorPicker\ColorPicker.cs" />
+    <Compile Include="Assets\realvirtual\ChainElement.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\RecordReader.cs" />
+    <Compile Include="Assets\realvirtual\private\CameraPos.cs" />
+    <Compile Include="Assets\realvirtual\Professional\ModelZoo\private\SceneManagement.cs" />
+    <Compile Include="Assets\realvirtual\private\Modules\SceneButtons\HandleSwitch3D.cs" />
+    <Compile Include="Assets\realvirtual\ReplayRecording.cs" />
+    <Compile Include="Assets\realvirtual\GuideLine.cs" />
+    <Compile Include="Assets\realvirtual\private\SnapPoints\private\SnapPoint.cs" />
+    <Compile Include="Assets\realvirtual\Drive_Sequence.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\DriveToAction.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\RectField.cs" />
+    <Compile Include="Assets\realvirtual\LogicSteps\LogicStep_StatState.cs" />
+    <Compile Include="Assets\realvirtual\Lamp.cs" />
+    <Compile Include="Assets\realvirtual\Drive.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\PLCOutputFloat.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\InterfaceStructs.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Fields\TextureReferenceField.cs" />
+    <Compile Include="Assets\realvirtual\PLCLogics\LogicStopDriveOnSensor.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Shared\Scripts\RenderPipelineStatus.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\ExposedVariablesEnumerator.cs" />
+    <Compile Include="Assets\realvirtual\Drive_DestinationMotor.cs" />
+    <Compile Include="Assets\realvirtual\private\EditorGizmoOptions.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIMessage.cs" />
+    <Compile Include="Assets\realvirtual\private\Tools\RecalculateMeshNormals.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\UIComponents\Scripts\rvUISizeLink.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Internal\BlendShapeContainer.cs" />
+    <Compile Include="Assets\realvirtual\private\CutterObjectSlicedEvent.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\HierarchyDisplay.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\SceneStats.cs" />
+    <Compile Include="Assets\realvirtual\private\SurgeSpline\Objects\SplineTangent.cs" />
+    <Compile Include="Assets\realvirtual\private\Resources\Gizmo\Gizmo.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Editor\MeshSaveEditor.cs" />
+    <Compile Include="Assets\realvirtual\Professional\Statistics\IStatDisplay.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffUncalced.cs" />
+    <Compile Include="Assets\realvirtual\Source.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffEOF.cs" />
+    <Compile Include="Assets\realvirtual\Group.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\PlayGroupWindow.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\OpenXmlFormat\Records\Record.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\Inspector.cs" />
+    <Compile Include="Assets\realvirtual\Interfaces\TestSignalChanged.cs" />
+    <Compile Include="Assets\realvirtual\private\realvirtualBehavior.cs" />
+    <Compile Include="Assets\realvirtual\MeasurePLCCycleTime.cs" />
+    <Compile Include="Assets\realvirtual\UIPrefabs\Scripts\StartCameraPosition.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\HierarchyRootPseudoScene.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\BinaryFormat\XlsBiffLabelSSTCell.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeInspector\Helpers\DraggedReferenceSourceUI.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\Core\IWorkbook.cs" />
+    <Compile Include="Assets\realvirtual\Professional\MeshOptimizer\MeshSimplifier\Runtime\Components\LODGeneratorHelper.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy\IHierarchyRootContent.cs" />
+    <Compile Include="Assets\realvirtual\private\ExcelDataReader\CellRange.cs" />
+    <Compile Include="Assets\realvirtual\private\SnapPoints\private\ISnapable.cs" />
+    <Compile Include="Assets\realvirtual\private\IEditModeFinished.cs" />
+    <Compile Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Scripts\RuntimeHierarchy.cs" />
+    <Compile Include="Assets\realvirtual\RenderPipelines\Resources\URP\Scripts\SkyboxSetup.cs" />
+    <Compile Include="Assets\realvirtual\BehaviorGraph\SetSignalBoolAction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Compute\MarchingCubesAppend.compute" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\Shaders\ColorPickerAlphaShader.shader" />
+    <None Include="Assets\realvirtual\private\SurgeSpline\Art\Shaders\Invisible.shader" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\Volumetrics\HLSL\Raymarch.hlsl" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\README.txt" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\ThirdPartyNotices.txt" />
+    <None Include="Assets\realvirtual\private\Tools\ZIP\I18N.dll" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\SpaceNavigator\License.txt" />
+    <None Include="Assets\realvirtual\private\Tools\ZIP\Ionic.Zip.dll" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\Volumetrics\HLSL\CustomLighting.hlsl" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Compute\MeshBufferNormals.compute" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\Resources\VolumeCompute.compute" />
+    <None Include="Assets\realvirtual\realvirtual.base.asmdef" />
+    <None Include="Assets\realvirtual\private\SurgeSpline\ReadMe.txt" />
+    <None Include="Assets\realvirtual\private\MathNet\MathNet.Numerics.dll" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Shader\MarcherNormals.shader" />
+    <None Include="Assets\realvirtual\private\SurgeSpline\License.txt" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\SpaceNavigator\README.txt" />
+    <None Include="Assets\realvirtual\Scenes\DataForDemos\StandardWithCut.shader" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\SpaceNavigator\Changelog.txt" />
+    <None Include="Assets\realvirtual\private\Tools\ZIP\I18N.West.dll" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\Volumetrics\HLSL\Outline.hlsl" />
+    <None Include="Assets\realvirtual\README.txt" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Compute\MeshGPU.compute" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\ExternalResources\ColorWheel\Visuals\ColorWheelShader.shader" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\ScalarTexture3DToSdfTexture3DProcedure\Runtime\Base\Resources\ScalarTexture3DToSdfTexture3DProcedure.compute" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Shader\MeshBufferDefault.shader" />
+    <None Include="Assets\realvirtual\private\RuntimeUI\RuntimeInspector\ExternalResources\ColorWheel\ColorWheelLICENSE.txt" />
+    <None Include="Assets\realvirtual\private\WebsocketSharp\websocket-sharp.dll" />
+    <None Include="Assets\realvirtual\LICENSE.txt" />
+    <None Include="Assets\realvirtual\Professional\VolumeTracking\private\MarchingCubes\MarchingCubes\Resources\Shader\MarcherMin.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AccessibilityModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClothModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ContentLoadModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ContentLoadModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.CrashReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.DSPGraphModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.DirectorModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.GIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.GameCenterModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.GridModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.HotReloadModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.Physics2DModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ProfilerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PropertiesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.PropertiesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteShapeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.StreamingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubstanceModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubsystemsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TLSModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.TilemapModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UmbraModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityConnectModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityCurlModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityCurlModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.VFXModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.VRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.VehiclesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.VideoModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.WebGLModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\PlaybackEngines\WebGLSupport\Managed\UnityEngine.WebGLModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.CoreModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.DeviceSimulatorModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.DeviceSimulatorModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.DiagnosticsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.DiagnosticsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.EditorToolbarModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.EditorToolbarModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.GraphViewModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.GraphViewModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.PresetsUIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.PresetsUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.QuickSearchModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.QuickSearchModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.SceneTemplateModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneTemplateModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.SceneViewModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneViewModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreFontEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreFontEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreTextEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreTextEngineModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UIBuilderModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIBuilderModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsSamplesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsSamplesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UnityConnectModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.WebGL.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\PlaybackEngines\WebGLSupport\UnityEditor.WebGL.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EditorExtension">
+      <HintPath>Assets\realvirtual\private\Editor\EditorExtension.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="I18N">
+      <HintPath>Assets\realvirtual\private\Tools\ZIP\I18N.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ReportGeneratorMerged">
+      <HintPath>Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>Assets\realvirtual\private\Tools\ZIP\Ionic.Zip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Plastic.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.10.0\Lib\Editor\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TDx.TDxInput">
+      <HintPath>Assets\realvirtual\private\RuntimeUI\SpaceNavigator\Plugins\TDx.TDxInput.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Plastic.Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.10.0\Lib\Editor\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>Assets\realvirtual\private\MathNet\MathNet.Numerics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4netPlastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.10.0\Lib\Editor\log4netPlastic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="unityplastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.10.0\Lib\Editor\unityplastic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sharp7">
+      <HintPath>Assets\realvirtual\Interfaces\S7TCPIP\Sharp7.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="I18N.West">
+      <HintPath>Assets\realvirtual\private\Tools\ZIP\I18N.West.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ikcalculator">
+      <HintPath>Assets\realvirtual\Professional\IK\private\ikcalculator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\Microsoft.Win32.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.AppContext">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.AppContext.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Buffers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Collections.Concurrent">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Concurrent.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Collections">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Collections.NonGeneric">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.NonGeneric.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Collections.Specialized">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Specialized.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.EventBasedAsync">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.EventBasedAsync.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.TypeConverter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Console">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Console.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.Common">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Data.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.Contracts">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Contracts.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.Debug">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Debug.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.FileVersionInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.FileVersionInfo.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.Process">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Process.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.StackTrace.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.TextWriterTraceListener">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tools">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.TraceSource">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TraceSource.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tracing">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tracing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Drawing.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Dynamic.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Dynamic.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Globalization.Calendars">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Calendars.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Globalization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.ZipFile">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.DriveInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.DriveInfo.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Watcher">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Watcher.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.IsolatedStorage">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.IsolatedStorage.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.MemoryMappedFiles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.MemoryMappedFiles.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Pipes">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Pipes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.UnmanagedMemoryStream">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.UnmanagedMemoryStream.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Linq.Expressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Expressions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Linq.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Parallel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Linq.Queryable">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Queryable.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Memory.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Http.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.NameResolution">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NameResolution.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.NetworkInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NetworkInformation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Ping">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Ping.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Requests">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Requests.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Security">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Security.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Sockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Sockets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.WebHeaderCollection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebHeaderCollection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.WebSockets.Client">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.Client.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.WebSockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Numerics.Vectors.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ObjectModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ObjectModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.DispatchProxy">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.DispatchProxy.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Emit">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.ILGeneration">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.ILGeneration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.Lightweight">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.Lightweight.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Resources.Reader">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Reader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Resources.ResourceManager">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.ResourceManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Resources.Writer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Writer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.VisualC">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.CompilerServices.VisualC.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Handles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Handles.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Numerics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Formatters.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Json">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Xml.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Claims">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Claims.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Csp">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Csp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Principal">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Principal.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.SecureString">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.SecureString.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Encoding.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.RegularExpressions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Overlapped">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Overlapped.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Parallel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Thread.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.ThreadPool">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.ThreadPool.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Timer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Timer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.ReaderWriter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.ReaderWriter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XDocument.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlDocument.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XmlSerializer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlSerializer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.XDocument.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\mscorlib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Drawing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.IO.Compression.FileSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Numerics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Runtime.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel.Web">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ServiceModel.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Transactions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Transactions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Windows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Linq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Serialization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.62f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Shaders">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Config.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Config.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="NaughtyAttributes.Core.csproj" />
+    <ProjectReference Include="realvirtual.spacenavigator.csproj" />
+    <ProjectReference Include="IngameDebugConsole.Runtime.csproj" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <ProjectCapability Remove="LaunchProfiles" />
+    <ProjectCapability Remove="SharedProjectReferences" />
+    <ProjectCapability Remove="ReferenceManagerSharedProjects" />
+    <ProjectCapability Remove="ProjectReferences" />
+    <ProjectCapability Remove="ReferenceManagerProjects" />
+    <ProjectCapability Remove="COMReferences" />
+    <ProjectCapability Remove="ReferenceManagerCOM" />
+    <ProjectCapability Remove="AssemblyReferences" />
+    <ProjectCapability Remove="ReferenceManagerAssemblies" />
+  </ItemGroup>
+</Project>
