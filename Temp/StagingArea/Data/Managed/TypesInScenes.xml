@@ -1,6 +1,10 @@
 <linker>
 	<assembly fullname="Assembly-CSharp">
+		<type fullname="IoTDashboard.EmergencyStopHandler" preserve="nothing"/>
 		<type fullname="IoTDashboard.IoTWebServerSetup" preserve="nothing"/>
+		<type fullname="IoTDashboard.WebGLCommandReceiver" preserve="nothing"/>
+		<type fullname="IoTDashboard.WebGLDataSender" preserve="nothing"/>
+		<type fullname="IoTDashboard.WebGLIoTMonitor" preserve="nothing"/>
 	</assembly>
 	<assembly fullname="realvirtual.base">
 		<type fullname="Pixelplacement.SplineAnchor" preserve="nothing"/>

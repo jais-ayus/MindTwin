@@ -5,6 +5,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -66,8 +67,13 @@ namespace realvirtual
         
         private CancellationTokenSource cancellationTokenSource, cancellationTokenSourceEmergency;
         private bool startmachinebefore = false;
+#if UNITY_WEBGL
+        private Coroutine machineTimerCoroutine;
+        private Coroutine toolingWheelCoroutine;
+#else
         private CancellationTokenSource machineTimerToken;
         private CancellationTokenSource toolingWheelToken;
+#endif
         new void Awake()
         {
             // if not enabled do nothing
@@ -142,6 +148,18 @@ namespace realvirtual
                 EntryConveyorStart.Value = false;
                 ExitConveyorStart.Value = false;
                 // Cancel any running timers when switch is off
+#if UNITY_WEBGL
+                if (machineTimerCoroutine != null)
+                {
+                    StopCoroutine(machineTimerCoroutine);
+                    machineTimerCoroutine = null;
+                }
+                if (toolingWheelCoroutine != null)
+                {
+                    StopCoroutine(toolingWheelCoroutine);
+                    toolingWheelCoroutine = null;
+                }
+#else
                 if (machineTimerToken != null)
                 {
                     machineTimerToken.Cancel();
@@ -150,6 +168,7 @@ namespace realvirtual
                 {
                     toolingWheelToken.Cancel();
                 }
+#endif
             }
             
             // Emergency Button Pressed - switch if possible
@@ -411,6 +430,25 @@ namespace realvirtual
         }
         
         // Safe timer methods that can be cancelled
+#if UNITY_WEBGL
+        void StartMachineTimer(float delay)
+        {
+            // Stop existing coroutine if running
+            if (machineTimerCoroutine != null)
+            {
+                StopCoroutine(machineTimerCoroutine);
+            }
+            
+            machineTimerCoroutine = StartCoroutine(MachineTimerCoroutine(delay));
+        }
+
+        IEnumerator MachineTimerCoroutine(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            EndMachine();
+            machineTimerCoroutine = null;
+        }
+#else
         async void StartMachineTimer(float delay)
         {
             // Cancel any existing timer
@@ -431,7 +469,27 @@ namespace realvirtual
                 // Timer was cancelled, do nothing
             }
         }
+#endif
         
+#if UNITY_WEBGL
+        void StartToolingWheelTimer(float delay)
+        {
+            // Stop existing coroutine if running
+            if (toolingWheelCoroutine != null)
+            {
+                StopCoroutine(toolingWheelCoroutine);
+            }
+            
+            toolingWheelCoroutine = StartCoroutine(ToolingWheelTimerCoroutine(delay));
+        }
+
+        IEnumerator ToolingWheelTimerCoroutine(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            EndMoveToolingWheel();
+            toolingWheelCoroutine = null;
+        }
+#else
         async void StartToolingWheelTimer(float delay)
         {
             // Cancel any existing timer
@@ -452,6 +510,7 @@ namespace realvirtual
                 // Timer was cancelled, do nothing
             }
         }
+#endif
     }
 }
 

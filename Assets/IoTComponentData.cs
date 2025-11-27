@@ -32,10 +32,22 @@ namespace IoTDashboard
         public List<float> ValueHistory;
         public int MaxHistorySize = 100;
         
+        // Category metadata (Phase 1)
+        public string Category;
+        public bool HasTransportSurface;
+        public string ParentRobot;
+        public bool IsRobotAxis;
+        public bool IsRobotGrip;
+        
         public IoTComponentData()
         {
             ValueHistory = new List<float>();
             StatusColor = Color.white;
+            Category = "other";
+            HasTransportSurface = false;
+            ParentRobot = null;
+            IsRobotAxis = false;
+            IsRobotGrip = false;
         }
         
         public void AddValueToHistory(float val)
@@ -48,5 +60,10 @@ namespace IoTDashboard
         }
     }
 }
+
+
+
+
+
 
 

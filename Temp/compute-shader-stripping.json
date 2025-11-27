@@ -1,5 +1,154 @@
 {
-    "totalVariantsIn": 0,
-    "totalVariantsOut": 0,
-    "shaders": []
+    "totalVariantsIn": 17,
+    "totalVariantsOut": 17,
+    "shaders": [
+        {
+            "inputVariants": 8,
+            "outputVariants": 8,
+            "name": "ScalarTexture3DToSdfTexture3DProcedure",
+            "pipelines": [
+                {
+                    "inputVariants": 8,
+                    "outputVariants": 8,
+                    "pipeline": "",
+                    "variants": [
+                        {
+                            "inputVariants": 2,
+                            "outputVariants": 2,
+                            "variantName": "Kernel: _SeedKernel",
+                            "stripTimeMs": 0.005
+                        },
+                        {
+                            "inputVariants": 2,
+                            "outputVariants": 2,
+                            "variantName": "Kernel: _FloodKernel",
+                            "stripTimeMs": 0.0006000000000000001
+                        },
+                        {
+                            "inputVariants": 2,
+                            "outputVariants": 2,
+                            "variantName": "Kernel: _DistKernel",
+                            "stripTimeMs": 0.0001
+                        },
+                        {
+                            "inputVariants": 2,
+                            "outputVariants": 2,
+                            "variantName": "Kernel: _ShowSeedsKernel",
+                            "stripTimeMs": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "inputVariants": 2,
+            "outputVariants": 2,
+            "name": "MeshBufferNormals",
+            "pipelines": [
+                {
+                    "inputVariants": 2,
+                    "outputVariants": 2,
+                    "pipeline": "",
+                    "variants": [
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: ComputeNormals",
+                            "stripTimeMs": 0.0006000000000000001
+                        },
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: UpdateArgs",
+                            "stripTimeMs": 0.0001
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "inputVariants": 3,
+            "outputVariants": 3,
+            "name": "MarchingCubesAppend",
+            "pipelines": [
+                {
+                    "inputVariants": 3,
+                    "outputVariants": 3,
+                    "pipeline": "",
+                    "variants": [
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: CSMain",
+                            "stripTimeMs": 0.0006000000000000001
+                        },
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: AdjustArgs",
+                            "stripTimeMs": 0.0001
+                        },
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: ToRenderMesh",
+                            "stripTimeMs": 0.0001
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "inputVariants": 1,
+            "outputVariants": 1,
+            "name": "MeshGPU",
+            "pipelines": [
+                {
+                    "inputVariants": 1,
+                    "outputVariants": 1,
+                    "pipeline": "",
+                    "variants": [
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: ToRenderMesh",
+                            "stripTimeMs": 0.0006000000000000001
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "inputVariants": 3,
+            "outputVariants": 3,
+            "name": "VolumeCompute",
+            "pipelines": [
+                {
+                    "inputVariants": 3,
+                    "outputVariants": 3,
+                    "pipeline": "",
+                    "variants": [
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: UpdateVolumeTexture",
+                            "stripTimeMs": 0.0004
+                        },
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: UpdateTimeVolumeTexture",
+                            "stripTimeMs": 0.0001
+                        },
+                        {
+                            "inputVariants": 1,
+                            "outputVariants": 1,
+                            "variantName": "Kernel: ClearVolumeTexture",
+                            "stripTimeMs": 0.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }

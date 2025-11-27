@@ -1,0 +1,32 @@
+{
+  "name": "iot-webgl-dashboard",
+  "version": "1.0.0",
+  "description": "IoT WebGL Dashboard with unified backend API",
+  "main": "start-server.js",
+  "scripts": {
+    "start": "node start-server.js",
+    "install-backend": "cd backend && npm install"
+  },
+  "keywords": [
+    "iot",
+    "webgl",
+    "dashboard",
+    "unity"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "open": "^8.4.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
+
+
+
+
+
+
+
+
