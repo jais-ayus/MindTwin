@@ -1,0 +1,50 @@
+### Unity
+Library/
+Temp/
+Obj/
+Logs/
+MemoryCaptures/
+Builds/
+/UserSettings/
+
+# Crash logs
+sysinfo.txt
+*.stacktrace
+
+### Visual Studio / Rider
+.vs/
+*.user
+*.userprefs
+*.csproj.user
+[Bb]in/
+[Oo]bj/
+
+### Node / frontend
+node_modules/
+cedd/node_modules/
+cedd/backend/node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+### Python
+.venv/
+venv/
+**/__pycache__/
+*.pyc
+*.pyo
+
+### Environment / secrets
+.env
+*.key
+*.pem
+*.pfx
+*.p12
+
+### OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+
