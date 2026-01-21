@@ -1,32 +1,35 @@
 {
-  "name": "iot-webgl-dashboard",
-  "version": "1.0.0",
-  "description": "IoT WebGL Dashboard with unified backend API",
+  "name": "mindtwin-iot-dashboard",
+  "version": "2.0.0",
+  "description": "MINDTWIN - IoT Digital Twin Dashboard with AI-ready architecture",
   "main": "start-server.js",
   "scripts": {
     "start": "node start-server.js",
-    "install-backend": "cd backend && npm install"
+    "install-backend": "cd backend && npm install",
+    "install-all": "npm install && cd backend && npm install"
   },
   "keywords": [
     "iot",
     "webgl",
     "dashboard",
-    "unity"
+    "unity",
+    "digital-twin",
+    "ai",
+    "mindtwin"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "open": "^8.4.2"
+    "open": "^8.4.2",
+    "puppeteer": "^15.5.0"
   },
   "devDependencies": {
     "http-server": "^14.1.1"
+  },
+  "optionalDependencies": {
+    "socket.io": "^4.7.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
-
-
-
-
-
-
-
-
