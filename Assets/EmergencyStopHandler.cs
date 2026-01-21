@@ -8,6 +8,16 @@ using realvirtual;
 namespace IoTDashboard
 {
     /// <summary>
+    /// Control mode for the simulation system
+    /// </summary>
+    public enum ControlMode
+    {
+        Manual,           // Dashboard commands work and persist, PLC bypassed for controlled components
+        EmergencyStopped, // All ForceStop = true, everything frozen
+        PlcRecovery       // After resume, PLC runs for 30 seconds to restore normal operation
+    }
+    
+    /// <summary>
     /// Handles emergency stop functionality for the digital twin
     /// </summary>
     public class EmergencyStopHandler : MonoBehaviour
@@ -15,6 +25,40 @@ namespace IoTDashboard
         public static bool IsHalted { get; private set; } = false;
         public static string HaltReason { get; private set; } = null;
         public static string HaltCategory { get; private set; } = null;
+        
+        // Control mode state management
+        public static ControlMode CurrentMode { get; private set; } = ControlMode.Manual;
+        public static float PlcRecoveryEndTime { get; private set; } = 0f;
+        private const float PLC_RECOVERY_DURATION = 30f; // 30 seconds for PLC to restore state
+        
+        /// <summary>
+        /// Returns true if dashboard commands are allowed (only in Manual mode)
+        /// </summary>
+        public static bool AreCommandsAllowed => CurrentMode == ControlMode.Manual;
+        
+        /// <summary>
+        /// Returns remaining time in PLC recovery mode (0 if not in recovery)
+        /// </summary>
+        public static float PlcRecoveryTimeRemaining => 
+            CurrentMode == ControlMode.PlcRecovery ? Mathf.Max(0, PlcRecoveryEndTime - Time.time) : 0f;
+        
+        /// <summary>
+        /// Gets a human-readable status string for the current mode
+        /// </summary>
+        public static string GetModeStatus()
+        {
+            switch (CurrentMode)
+            {
+                case ControlMode.Manual:
+                    return "MANUAL - Dashboard commands active";
+                case ControlMode.EmergencyStopped:
+                    return "EMERGENCY STOPPED - All systems halted";
+                case ControlMode.PlcRecovery:
+                    return $"PLC RECOVERY - {PlcRecoveryTimeRemaining:F1}s remaining";
+                default:
+                    return "UNKNOWN";
+            }
+        }
         
         private static EmergencyStopHandler instance;
         private static bool isStopping = false; // Prevent multiple simultaneous stops
@@ -25,6 +69,8 @@ namespace IoTDashboard
         private List<Grip> allGrips = new List<Grip>(); // For robots
         private List<PLCDemoCNCLoadUnload> cncControllers = new List<PLCDemoCNCLoadUnload>(); // PLC driven CNC/robot controllers
         private List<IKPath> allIKPaths = new List<IKPath>(); // CRITICAL: Robot path programs - must be frozen to prevent restart
+        private List<ControlLogic> allControlLogics = new List<ControlLogic>(); // CRITICAL FIX: PLC scripts that control conveyors
+        private List<Drive_Simple> allDriveSimples = new List<Drive_Simple>(); // CRITICAL FIX: Drive behaviors that pass signals to drives
         private ComponentStateStorage stateStorage = new ComponentStateStorage(); // For resume functionality
         
         void Awake()
@@ -69,8 +115,16 @@ namespace IoTDashboard
         /// </summary>
         void FixedUpdate()
         {
-            // Only enforce if production is halted
-            if (!IsHalted)
+            // Check if PLC recovery period ended → switch to Manual mode
+            if (CurrentMode == ControlMode.PlcRecovery && Time.time > PlcRecoveryEndTime)
+            {
+                CurrentMode = ControlMode.Manual;
+                Debug.Log("[EmergencyStopHandler] ========== PLC RECOVERY COMPLETE → MANUAL MODE ==========");
+                Debug.Log("[EmergencyStopHandler] Dashboard commands now active. Manual control enabled.");
+            }
+            
+            // Only enforce stop when in EmergencyStopped mode
+            if (CurrentMode != ControlMode.EmergencyStopped)
                 return;
             
             // Continuous enforcement - prevent any component from restarting
@@ -466,6 +520,15 @@ namespace IoTDashboard
             {
                 Debug.Log($"[EmergencyStopHandler] Enforced stop: {enforcedDrives} drives, {enforcedSources} sources, {enforcedAxes} axes, {enforcedGrips} grips (Frame {Time.frameCount})");
             }
+            
+            // CRITICAL FIX: Enforce ForceStop on all ControlLogic scripts (PLC_CanConveyor, PLC_BoxConveyor, etc.)
+            // This pauses the PLC state machines so they don't keep trying to control drives
+            EnforceControlLogicEmergencyStop();
+            
+            // CRITICAL FIX: Enforce ForceStop on all Drive_Simple behaviors
+            // These pass Forward/Backward signals to Drive.JogForward/JogBackward
+            // If not stopped, they might interfere with drive state during emergency
+            EnforceDriveSimpleEmergencyStop();
 
             // Also enforce PLC-driven CNC/robot controllers so their logic halts immediately
             EnforceCncControllerEmergencyState();
@@ -499,6 +562,66 @@ namespace IoTDashboard
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning($"[EmergencyStopHandler] Error enforcing IKPath emergency stop: {ex.Message}");
+                }
+            }
+        }
+        
+        /// <summary>
+        /// CRITICAL FIX: Enforce ForceStop on all ControlLogic scripts (PLC_CanConveyor, PLC_BoxConveyor, etc.)
+        /// This pauses the PLC state machines during emergency stop, preventing them from interfering
+        /// with drive states. On resume, clearing ForceStop allows PLCs to resume from their saved state.
+        /// </summary>
+        private void EnforceControlLogicEmergencyStop()
+        {
+            if (allControlLogics == null || allControlLogics.Count == 0)
+                return;
+            
+            for (int i = 0; i < allControlLogics.Count; i++)
+            {
+                ControlLogic cl = allControlLogics[i];
+                if (cl == null || cl.gameObject == null)
+                    continue;
+                
+                try
+                {
+                    // Set ForceStop to pause the PLC state machine
+                    // ControlLogic.FixedUpdate() checks ForceStop first and returns immediately if true
+                    cl.ForceStop = true;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"[EmergencyStopHandler] Error enforcing ControlLogic emergency stop on {cl.gameObject.name}: {ex.Message}");
+                }
+            }
+        }
+        
+        /// <summary>
+        /// CRITICAL FIX: Enforce ForceStop on all Drive_Simple behaviors
+        /// These components pass PLC signals (Forward/Backward) to Drive.JogForward/JogBackward.
+        /// If not stopped, they might interfere with drive state during emergency.
+        /// MOST IMPORTANTLY: On resume, clearing ForceStop on Drive_Simple allows it to 
+        /// once again pass the Forward signal from PLC to Drive.JogForward - THIS IS WHY CONVEYORS RESTART!
+        /// </summary>
+        private void EnforceDriveSimpleEmergencyStop()
+        {
+            if (allDriveSimples == null || allDriveSimples.Count == 0)
+                return;
+            
+            for (int i = 0; i < allDriveSimples.Count; i++)
+            {
+                Drive_Simple ds = allDriveSimples[i];
+                if (ds == null || ds.gameObject == null)
+                    continue;
+                
+                try
+                {
+                    // Set ForceStop to prevent signal passing
+                    // Drive_Simple.CalcFixedUpdate() checks ForceStop first and returns immediately if true
+                    ds.ForceStop = true;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"[EmergencyStopHandler] Error enforcing Drive_Simple emergency stop on {ds.gameObject.name}: {ex.Message}");
                 }
             }
         }
@@ -1094,10 +1217,12 @@ namespace IoTDashboard
                 Debug.Log($"[EmergencyStopHandler] Stored states for {instance.stateStorage.Count} components");
             }
             
-            // Set halted state
+            // Set halted state and control mode
             IsHalted = true;
             HaltReason = reason;
             HaltCategory = category;
+            CurrentMode = ControlMode.EmergencyStopped;
+            Debug.Log("[EmergencyStopHandler] Control mode set to: EMERGENCY_STOPPED");
             
             // Always use direct method for reliability (works even without instance)
             StopAllComponentsDirect(category);
@@ -1158,7 +1283,7 @@ namespace IoTDashboard
         /// </summary>
         public static void ResumeProduction()
         {
-            if (!IsHalted)
+            if (!IsHalted && CurrentMode != ControlMode.EmergencyStopped)
             {
                 Debug.LogWarning("[EmergencyStopHandler] Production is not halted, cannot resume");
                 return;
@@ -1166,11 +1291,16 @@ namespace IoTDashboard
             
             Debug.Log("[EmergencyStopHandler] ========== RESUMING PRODUCTION ==========");
             
-            // CRITICAL: Clear halted state FIRST to stop FixedUpdate() enforcement immediately
-            // This prevents re-freezing during restoration
+            // CRITICAL: Clear halted state and set PLC Recovery mode
             IsHalted = false;
             HaltReason = null;
             HaltCategory = null;
+            
+            // Set PLC Recovery mode for 30 seconds
+            CurrentMode = ControlMode.PlcRecovery;
+            PlcRecoveryEndTime = Time.time + PLC_RECOVERY_DURATION;
+            Debug.Log($"[EmergencyStopHandler] Control mode set to: PLC_RECOVERY (duration: {PLC_RECOVERY_DURATION} seconds)");
+            Debug.Log("[EmergencyStopHandler] Dashboard commands BLOCKED during PLC recovery. PLC logic will restore states.");
             
             // Stop all enforcement coroutines immediately
             if (instance != null && instance.gameObject != null)
@@ -1187,55 +1317,51 @@ namespace IoTDashboard
                 }
             }
             
-            // CRITICAL: Restore all component states AFTER clearing halted state
-            // Do immediate synchronous restoration first, then use coroutine for final sync
+            // SIMPLIFIED RESUME: Just clear ForceStops and let PLCs work naturally
+            // DO NOT directly manipulate signals or Drive.JogForward - let the signal chain work!
             if (instance != null && instance.gameObject != null)
             {
                 try
                 {
-                    // CRITICAL: Refresh component lists first to ensure we have all components
+                    // Step 1: Refresh component lists
                     instance.RefreshComponentLists();
                     Debug.Log($"[EmergencyStopHandler] Refreshed component lists: {instance.allDrives.Count} drives, {instance.allAxes.Count} axes, {instance.allGrips.Count} grips");
                     
-                    // IMMEDIATE: Clear all ForceStops synchronously (no delay)
-                    // NOTE: DO NOT reactivate grips here - keep them deactivated to prevent MU drops!
-                    instance.ClearAllForceStops();
-                    // instance.ReactivateAllGrips(); // REMOVED - grips stay deactivated until safe
-                    Debug.Log("[EmergencyStopHandler] Immediately cleared all ForceStops (grips kept deactivated)");
+                    // Step 2: Clear all ForceStops in correct order (PLCs → Drive_Simple → Drives)
+                    // This allows the signal chain to work naturally
+                    instance.ClearAllForceStopsSimple();
+                    Debug.Log("[EmergencyStopHandler] Cleared all ForceStops - signal chain now active");
                     
-                    // IMMEDIATE: Restore drive/axis states synchronously
+                    // Step 3: Restore drive and axis states (speeds, positions, movements)
                     instance.RestoreDriveAndAxisStates();
-                    Debug.Log("[EmergencyStopHandler] Immediately restored drive/axis states");
+                    Debug.Log("[EmergencyStopHandler] Restored drive and axis states");
                     
-                    // IMMEDIATE: Restore grip states synchronously
+                    // Step 4: Restore source states (enable sources)
+                    instance.RestoreSourceStates();
+                    Debug.Log("[EmergencyStopHandler] Restored source states");
+                    
+                    // Step 5: Restore grip states safely
                     instance.RestoreGripStatesSafely();
-                    Debug.Log("[EmergencyStopHandler] Immediately restored grip states");
+                    Debug.Log("[EmergencyStopHandler] Restored grip states");
                     
-                    // IMMEDIATE: Re-trigger movements synchronously (first pass)
-                    instance.ReTriggerDriveMovements();
-                    Debug.Log("[EmergencyStopHandler] Immediately re-triggered drive movements");
-                    
-                    // CRITICAL: Release PLC controllers to restore robot/CNC state machines
+                    // Step 6: Release CNC/robot controllers
                     instance.ReleaseCncControllers();
-                    Debug.Log("[EmergencyStopHandler] Released PLC controllers and restored state machines");
+                    Debug.Log("[EmergencyStopHandler] Released PLC controllers");
                     
-                    // CRITICAL FIX: RESET IKPath to safe state (not continue from where it was!)
-                    // This prevents robot from continuing to a Place target and dropping MU
-                    // The PLC will naturally restart the robot program from a safe state
+                    // Step 7: Reset IKPath to safe state
                     instance.RestoreIKPathStates();
-                    Debug.Log("[EmergencyStopHandler] Reset IKPath to safe state - robot will restart via PLC");
+                    Debug.Log("[EmergencyStopHandler] Reset IKPath states");
                     
-                    // CRITICAL FIX FOR CONVEYORS: Force all DriveBehaviors to re-sync signals
-                    // This ensures conveyors resume by re-reading their PLC signals
-                    instance.ForceDriveBehaviorSync();
-                    Debug.Log("[EmergencyStopHandler] Forced DriveBehavior sync - conveyors should resume");
+                    // Step 8: Ensure PLC On properties are true (just On property, not signals!)
+                    instance.EnsurePLCsEnabled();
+                    Debug.Log("[EmergencyStopHandler] Ensured PLCs are enabled");
                     
-                    // Then start coroutine for final sync and cleanup
-                    instance.StartCoroutine(instance.FinalResumeSyncCoroutine());
+                    // PLCs will now run their natural logic and control conveyors via signal chain
+                    Debug.Log("[EmergencyStopHandler] PLCs now controlling components via signal chain");
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError($"[EmergencyStopHandler] Error during immediate restoration: {ex.Message}\n{ex.StackTrace}");
+                    Debug.LogError($"[EmergencyStopHandler] Error during resume: {ex.Message}\n{ex.StackTrace}");
                 }
             }
             else
@@ -1808,6 +1934,59 @@ namespace IoTDashboard
                         }
                     }
                 }
+                
+                // CRITICAL FIX: Find all ControlLogic components (PLC scripts like PLC_CanConveyor, PLC_BoxConveyor, etc.)
+                // These MUST have ForceStop managed to pause/resume their state machines properly
+                allControlLogics.Clear();
+                ControlLogic[] controlLogics = null;
+                try
+                {
+                    controlLogics = FindObjectsByType<ControlLogic>(FindObjectsSortMode.None);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[EmergencyStopHandler] Error finding ControlLogic components: {ex.Message}");
+                    controlLogics = new ControlLogic[0];
+                }
+                
+                if (controlLogics != null)
+                {
+                    for (int i = 0; i < controlLogics.Length; i++)
+                    {
+                        if (controlLogics[i] != null && controlLogics[i].gameObject != null)
+                        {
+                            allControlLogics.Add(controlLogics[i]);
+                        }
+                    }
+                }
+                
+                // CRITICAL FIX: Find all Drive_Simple components (and other DriveBehaviors)
+                // These pass PLC signals (Forward/Backward) to Drive.JogForward/JogBackward
+                // If their ForceStop isn't cleared, conveyors won't restart!
+                allDriveSimples.Clear();
+                Drive_Simple[] driveSimples = null;
+                try
+                {
+                    driveSimples = FindObjectsByType<Drive_Simple>(FindObjectsSortMode.None);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[EmergencyStopHandler] Error finding Drive_Simple components: {ex.Message}");
+                    driveSimples = new Drive_Simple[0];
+                }
+                
+                if (driveSimples != null)
+                {
+                    for (int i = 0; i < driveSimples.Length; i++)
+                    {
+                        if (driveSimples[i] != null && driveSimples[i].gameObject != null)
+                        {
+                            allDriveSimples.Add(driveSimples[i]);
+                        }
+                    }
+                }
+                
+                Debug.Log($"[EmergencyStopHandler] Found {allControlLogics.Count} ControlLogic scripts, {allDriveSimples.Count} Drive_Simple behaviors");
             }
             catch (System.Exception ex)
             {
@@ -2370,10 +2549,61 @@ namespace IoTDashboard
         {
             try
             {
-                int clearedCount = 0;
-                int jogRestoredCount = 0;
+                // CRITICAL FIX: Clear ForceStops in the CORRECT ORDER for PLC signal chain to work:
+                // 1. First clear ControlLogic (PLCs) - so they can set their output signals
+                // 2. Then clear Drive_Simple - so it can read PLC signals and set Drive.JogForward
+                // 3. Finally clear Drives - so they can move based on JogForward from signal chain
                 
-                // CRITICAL: Use FindObjectsByType to catch ALL drives in the scene
+                Debug.Log("[EmergencyStopHandler] Clearing ForceStops in correct order for PLC signal chain...");
+                
+                // STEP 1: Clear ForceStop on all ControlLogic scripts (PLC_CanConveyor, PLC_BoxConveyor, etc.) FIRST
+                // This allows PLCs to resume their state machines and set their output signals
+                int controlLogicCleared = 0;
+                ControlLogic[] allControlLogicsInScene = FindObjectsByType<ControlLogic>(FindObjectsSortMode.None);
+                if (allControlLogicsInScene != null)
+                {
+                    for (int i = 0; i < allControlLogicsInScene.Length; i++)
+                    {
+                        ControlLogic cl = allControlLogicsInScene[i];
+                        if (cl != null && cl.gameObject != null)
+                        {
+                            try
+                            {
+                                cl.ForceStop = false;
+                                controlLogicCleared++;
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Step 1: Cleared ForceStop on {controlLogicCleared} ControlLogics (PLCs can now set signals)");
+                
+                // STEP 2: Clear ForceStop on all Drive_Simple behaviors
+                // THIS IS THE KEY: Drive_Simple reads PLC signals and sets Drive.JogForward
+                // Now that PLCs are running, Drive_Simple can pass their signals to drives
+                int driveSimpleCleared = 0;
+                Drive_Simple[] allDriveSimplesInScene = FindObjectsByType<Drive_Simple>(FindObjectsSortMode.None);
+                if (allDriveSimplesInScene != null)
+                {
+                    for (int i = 0; i < allDriveSimplesInScene.Length; i++)
+                    {
+                        Drive_Simple ds = allDriveSimplesInScene[i];
+                        if (ds != null && ds.gameObject != null)
+                        {
+                            try
+                            {
+                                ds.ForceStop = false;
+                                driveSimpleCleared++;
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Step 2: Cleared ForceStop on {driveSimpleCleared} Drive_Simples (signals can now flow)");
+                
+                // STEP 3: Clear ForceStop on all Drives LAST
+                // By now, PLCs have set their signals and Drive_Simple has propagated them to Drive.JogForward
+                int driveCleared = 0;
                 Drive[] allDrivesInScene = FindObjectsByType<Drive>(FindObjectsSortMode.None);
                 if (allDrivesInScene != null)
                 {
@@ -2385,37 +2615,13 @@ namespace IoTDashboard
                         
                         try
                         {
-                            // Step 1: Clear ForceStop
                             drive.ForceStop = false;
-                            clearedCount++;
-                            
-                            // Step 2: CRITICAL FIX - Restore JogForward/JogBackward from stored state
-                            // Without this, conveyors won't move even with ForceStop=false!
-                            string driveName = drive.gameObject.name;
-                            var driveState = stateStorage.GetState<ComponentStateStorage.DriveState>(driveName);
-                            if (driveState != null)
-                            {
-                                // Restore jog states - this is what makes conveyors actually move!
-                                drive.JogForward = driveState.wasJogForward;
-                                drive.JogBackward = driveState.wasJogBackward;
-                                
-                                // Also restore speed settings
-                                if (driveState.targetSpeed > 0)
-                                    drive.TargetSpeed = driveState.targetSpeed;
-                                
-                                if (driveState.wasJogForward || driveState.wasJogBackward)
-                                {
-                                    jogRestoredCount++;
-                                    Debug.Log($"[EmergencyStopHandler] Restored jog state for {driveName}: JogForward={driveState.wasJogForward}, JogBackward={driveState.wasJogBackward}");
-                                }
-                            }
+                            driveCleared++;
                         }
-                        catch (System.Exception ex)
-                        {
-                            Debug.LogWarning($"[EmergencyStopHandler] Error restoring drive {drive.gameObject?.name}: {ex.Message}");
-                        }
+                        catch { }
                     }
                 }
+                Debug.Log($"[EmergencyStopHandler] Step 3: Cleared ForceStop on {driveCleared} Drives (drives can now move)");
                 
                 // Also clear ForceStop on all axis drives
                 Axis[] allAxesInScene = FindObjectsByType<Axis>(FindObjectsSortMode.None);
@@ -2432,7 +2638,6 @@ namespace IoTDashboard
                                 if (axisDrive != null)
                                 {
                                     axisDrive.ForceStop = false;
-                                    clearedCount++;
                                 }
                             }
                             catch { }
@@ -2455,7 +2660,6 @@ namespace IoTDashboard
                                 if (gripDrive != null)
                                 {
                                     gripDrive.ForceStop = false;
-                                    clearedCount++;
                                 }
                             }
                             catch { }
@@ -2463,11 +2667,171 @@ namespace IoTDashboard
                     }
                 }
                 
-                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {clearedCount} drives, restored jog state on {jogRestoredCount} drives");
+                Debug.Log($"[EmergencyStopHandler] ForceStop clearing complete - PLC signal chain should now be active");
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"[EmergencyStopHandler] Error clearing ForceStops: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// SIMPLIFIED: Just clears ForceStop on all components - NO direct signal or JogForward manipulation!
+        /// Lets the PLC signal chain work naturally: PLC → Drive_Simple → Drive
+        /// </summary>
+        private void ClearAllForceStopsSimple()
+        {
+            try
+            {
+                Debug.Log("[EmergencyStopHandler] Clearing ForceStops ONLY (no signal manipulation)...");
+                
+                // Step 1: Clear ForceStop on all ControlLogic (PLCs) FIRST
+                int plcCleared = 0;
+                ControlLogic[] allPLCs = FindObjectsByType<ControlLogic>(FindObjectsSortMode.None);
+                if (allPLCs != null)
+                {
+                    for (int i = 0; i < allPLCs.Length; i++)
+                    {
+                        if (allPLCs[i] != null && allPLCs[i].gameObject != null)
+                        {
+                            allPLCs[i].ForceStop = false;
+                            plcCleared++;
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {plcCleared} ControlLogic scripts (PLCs can run)");
+                
+                // Step 2: Clear ForceStop on all Drive_Simple
+                int driveSimpleCleared = 0;
+                Drive_Simple[] allDriveSimples = FindObjectsByType<Drive_Simple>(FindObjectsSortMode.None);
+                if (allDriveSimples != null)
+                {
+                    for (int i = 0; i < allDriveSimples.Length; i++)
+                    {
+                        if (allDriveSimples[i] != null && allDriveSimples[i].gameObject != null)
+                        {
+                            allDriveSimples[i].ForceStop = false;
+                            driveSimpleCleared++;
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {driveSimpleCleared} Drive_Simple (signals can flow)");
+                
+                // Step 3: Clear ForceStop on all Drives
+                int drivesCleared = 0;
+                Drive[] allDrives = FindObjectsByType<Drive>(FindObjectsSortMode.None);
+                if (allDrives != null)
+                {
+                    for (int i = 0; i < allDrives.Length; i++)
+                    {
+                        if (allDrives[i] != null && allDrives[i].gameObject != null)
+                        {
+                            allDrives[i].ForceStop = false;
+                            drivesCleared++;
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {drivesCleared} Drives (drives can move)");
+                
+                // Step 4: Clear ForceStop on TransportSurfaces
+                int surfacesCleared = 0;
+                TransportSurface[] allSurfaces = FindObjectsByType<TransportSurface>(FindObjectsSortMode.None);
+                if (allSurfaces != null)
+                {
+                    for (int i = 0; i < allSurfaces.Length; i++)
+                    {
+                        if (allSurfaces[i] != null && allSurfaces[i].gameObject != null)
+                        {
+                            allSurfaces[i].ForceStop = false;
+                            surfacesCleared++;
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {surfacesCleared} TransportSurfaces");
+                
+                // Step 5: Clear ForceStop on IKPaths
+                int ikPathsCleared = 0;
+                IKPath[] allIKPaths = FindObjectsByType<IKPath>(FindObjectsSortMode.None);
+                if (allIKPaths != null)
+                {
+                    for (int i = 0; i < allIKPaths.Length; i++)
+                    {
+                        if (allIKPaths[i] != null && allIKPaths[i].gameObject != null)
+                        {
+                            allIKPaths[i].ForceStop = false;
+                            ikPathsCleared++;
+                        }
+                    }
+                }
+                Debug.Log($"[EmergencyStopHandler] Cleared ForceStop on {ikPathsCleared} IKPaths");
+                
+                Debug.Log("[EmergencyStopHandler] All ForceStops cleared - signal chain should now be active");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[EmergencyStopHandler] Error in ClearAllForceStopsSimple: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// SIMPLIFIED: Just ensures PLC On properties are true - NO signal manipulation!
+        /// </summary>
+        private void EnsurePLCsEnabled()
+        {
+            try
+            {
+                int enabled = 0;
+                
+                // Enable PLC_CanConveyor scripts
+                PLC_CanConveyor[] canConveyors = FindObjectsByType<PLC_CanConveyor>(FindObjectsSortMode.None);
+                if (canConveyors != null)
+                {
+                    for (int i = 0; i < canConveyors.Length; i++)
+                    {
+                        if (canConveyors[i] != null)
+                        {
+                            canConveyors[i].On = true;
+                            canConveyors[i].ForceStop = false;
+                            enabled++;
+                        }
+                    }
+                }
+                
+                // Enable PLC_BoxConveyor scripts
+                PLC_BoxConveyor[] boxConveyors = FindObjectsByType<PLC_BoxConveyor>(FindObjectsSortMode.None);
+                if (boxConveyors != null)
+                {
+                    for (int i = 0; i < boxConveyors.Length; i++)
+                    {
+                        if (boxConveyors[i] != null)
+                        {
+                            boxConveyors[i].On = true;
+                            boxConveyors[i].ForceStop = false;
+                            enabled++;
+                        }
+                    }
+                }
+                
+                // Enable PLC_Handling scripts
+                PLC_Handling[] handlingPLCs = FindObjectsByType<PLC_Handling>(FindObjectsSortMode.None);
+                if (handlingPLCs != null)
+                {
+                    for (int i = 0; i < handlingPLCs.Length; i++)
+                    {
+                        if (handlingPLCs[i] != null)
+                        {
+                            handlingPLCs[i].On = true;
+                            handlingPLCs[i].ForceStop = false;
+                            enabled++;
+                        }
+                    }
+                }
+                
+                Debug.Log($"[EmergencyStopHandler] Enabled {enabled} PLC scripts (On=true, ForceStop=false)");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[EmergencyStopHandler] Error in EnsurePLCsEnabled: {ex.Message}");
             }
         }
         
@@ -2506,6 +2870,167 @@ namespace IoTDashboard
             catch (System.Exception ex)
             {
                 Debug.LogError($"[EmergencyStopHandler] Error re-activating grips: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// CRITICAL FIX: Restores all Source component states after resume
+        /// This was MISSING from the original resume flow - sources stayed disabled!
+        /// </summary>
+        private void RestoreSourceStates()
+        {
+            try
+            {
+                int restoredCount = 0;
+                
+                // Use FindObjectsByType to catch ALL sources in the scene
+                Source[] allSourcesInScene = FindObjectsByType<Source>(FindObjectsSortMode.None);
+                if (allSourcesInScene == null || allSourcesInScene.Length == 0)
+                {
+                    Debug.Log("[EmergencyStopHandler] No sources found to restore");
+                    return;
+                }
+                
+                for (int i = 0; i < allSourcesInScene.Length; i++)
+                {
+                    Source source = allSourcesInScene[i];
+                    if (source == null || source.gameObject == null)
+                        continue;
+                    
+                    try
+                    {
+                        string sourceName = source.gameObject.name;
+                        var state = stateStorage.GetState<ComponentStateStorage.SourceState>(sourceName);
+                        
+                        if (state != null)
+                        {
+                            // Restore the source state from before emergency stop
+                            source.Enabled = state.wasEnabled;
+                            source.GenerateMU = state.wasGenerateMU;
+                            restoredCount++;
+                            
+                            if (state.wasEnabled)
+                            {
+                                Debug.Log($"[EmergencyStopHandler] Restored source {sourceName}: Enabled={state.wasEnabled}, GenerateMU={state.wasGenerateMU}");
+                            }
+                        }
+                        else
+                        {
+                            // No stored state - assume source should be enabled (default behavior)
+                            source.Enabled = true;
+                            Debug.Log($"[EmergencyStopHandler] No stored state for source {sourceName}, enabling by default");
+                            restoredCount++;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"[EmergencyStopHandler] Error restoring source {source.gameObject?.name}: {ex.Message}");
+                    }
+                }
+                
+                Debug.Log($"[EmergencyStopHandler] Restored {restoredCount} source states");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[EmergencyStopHandler] Error in RestoreSourceStates: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// CRITICAL FIX: Restores PLC conveyor settings (On property) after resume
+        /// PLC_CanConveyor and PLC_BoxConveyor both have an "On" property that must be true for conveyors to run
+        /// </summary>
+        private void RestorePLCConveyorSettings()
+        {
+            try
+            {
+                int restoredCount = 0;
+                
+                // Find all PLC_CanConveyor scripts and ensure On=true
+                PLC_CanConveyor[] canConveyors = FindObjectsByType<PLC_CanConveyor>(FindObjectsSortMode.None);
+                if (canConveyors != null)
+                {
+                    for (int i = 0; i < canConveyors.Length; i++)
+                    {
+                        PLC_CanConveyor plc = canConveyors[i];
+                        if (plc == null || plc.gameObject == null)
+                            continue;
+                        
+                        try
+                        {
+                            // Ensure the PLC is enabled (On=true)
+                            plc.On = true;
+                            
+                            // Clear ForceStop so the PLC can run
+                            plc.ForceStop = false;
+                            
+                            // If ButtonConveyorOn exists, ensure it's true
+                            if (plc.ButtonConveyorOn != null)
+                            {
+                                plc.ButtonConveyorOn.SetValue(true);
+                            }
+                            
+                            restoredCount++;
+                            Debug.Log($"[EmergencyStopHandler] Restored PLC_CanConveyor: {plc.gameObject.name} - On=true, ForceStop=false");
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogWarning($"[EmergencyStopHandler] Error restoring PLC_CanConveyor {plc.gameObject?.name}: {ex.Message}");
+                        }
+                    }
+                }
+                
+                // Find all PLC_BoxConveyor scripts and ensure On=true
+                PLC_BoxConveyor[] boxConveyors = FindObjectsByType<PLC_BoxConveyor>(FindObjectsSortMode.None);
+                if (boxConveyors != null)
+                {
+                    for (int i = 0; i < boxConveyors.Length; i++)
+                    {
+                        PLC_BoxConveyor plc = boxConveyors[i];
+                        if (plc == null || plc.gameObject == null)
+                            continue;
+                        
+                        try
+                        {
+                            // Ensure the PLC is enabled (On=true)
+                            plc.On = true;
+                            
+                            // Clear ForceStop so the PLC can run
+                            plc.ForceStop = false;
+                            
+                            restoredCount++;
+                            Debug.Log($"[EmergencyStopHandler] Restored PLC_BoxConveyor: {plc.gameObject.name} - On=true, ForceStop=false");
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogWarning($"[EmergencyStopHandler] Error restoring PLC_BoxConveyor {plc.gameObject?.name}: {ex.Message}");
+                        }
+                    }
+                }
+                
+                // Also ensure all other ControlLogic scripts have ForceStop=false
+                ControlLogic[] allControlLogics = FindObjectsByType<ControlLogic>(FindObjectsSortMode.None);
+                if (allControlLogics != null)
+                {
+                    for (int i = 0; i < allControlLogics.Length; i++)
+                    {
+                        ControlLogic cl = allControlLogics[i];
+                        if (cl != null && cl.gameObject != null)
+                        {
+                            try
+                            {
+                                cl.ForceStop = false;
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                
+                Debug.Log($"[EmergencyStopHandler] Restored {restoredCount} PLC conveyor settings");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[EmergencyStopHandler] Error in RestorePLCConveyorSettings: {ex.Message}");
             }
         }
         
@@ -2911,92 +3436,28 @@ namespace IoTDashboard
         
         /// <summary>
         /// Final sync coroutine - runs after immediate restoration to ensure everything is synced
-        /// This handles final state synchronization and cleanup
+        /// SIMPLIFIED: Just ensures ForceStops stay cleared - no signal manipulation
         /// </summary>
         private IEnumerator FinalResumeSyncCoroutine()
         {
-            Debug.Log("[EmergencyStopHandler] Starting final resume sync coroutine");
+            Debug.Log("[EmergencyStopHandler] Starting simplified final resume sync");
             
-            // Wait one frame to allow components to process the restored states
+            // Wait a few frames to allow PLCs to run their logic
+            yield return null;
             yield return null;
             
-            // Final safety pass - ensure ALL ForceStops are cleared (drives)
+            // Final safety pass - ensure ALL ForceStops are still cleared
             try
             {
-                ClearAllForceStops();
-                Debug.Log("[EmergencyStopHandler] Final Drive ForceStop clearing pass completed");
+                ClearAllForceStopsSimple();
+                Debug.Log("[EmergencyStopHandler] Final ForceStop clearing pass completed");
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"[EmergencyStopHandler] Error in final ForceStop clearing: {ex.Message}");
             }
             
-            // Final safety pass - ensure ALL IKPath ForceStops are cleared
-            try
-            {
-                ClearAllIKPathForceStops();
-                Debug.Log("[EmergencyStopHandler] Final IKPath ForceStop clearing pass completed");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[EmergencyStopHandler] Error in final IKPath ForceStop clearing: {ex.Message}");
-            }
-            
-            // Wait one more frame
-            yield return null;
-            
-            // Re-trigger drive movements to ensure they resume
-            try
-            {
-                ReTriggerDriveMovements();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[EmergencyStopHandler] Error re-triggering movements: {ex.Message}");
-            }
-            
-            // Wait one more frame for movements to start
-            yield return null;
-            
-            // CRITICAL: Final pass - Force DriveBehavior sync again
-            // This ensures conveyors are definitely running after all other restorations
-            try
-            {
-                ForceDriveBehaviorSync();
-                Debug.Log("[EmergencyStopHandler] Final DriveBehavior sync completed");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[EmergencyStopHandler] Error in final DriveBehavior sync: {ex.Message}");
-            }
-            
-            // Release PLC controllers
-            try
-            {
-                ReleaseCncControllers();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[EmergencyStopHandler] Error releasing CNC controllers: {ex.Message}");
-            }
-            
-            // Wait one more frame for PLC to process
-            yield return null;
-            
-            // CRITICAL: One more DriveBehavior sync after PLC has had a chance to update signals
-            try
-            {
-                ForceDriveBehaviorSync();
-                Debug.Log("[EmergencyStopHandler] Post-PLC DriveBehavior sync completed");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[EmergencyStopHandler] Error in post-PLC DriveBehavior sync: {ex.Message}");
-            }
-            
-            // Wait a few more frames before reactivating Fixers
-            // This ensures the robot has been fully reset and won't trigger Place() immediately
-            yield return null;
+            // Wait a few more frames
             yield return null;
             yield return null;
             
@@ -3004,7 +3465,7 @@ namespace IoTDashboard
             try
             {
                 ReactivateAllFixers();
-                Debug.Log("[EmergencyStopHandler] Reactivated Fixers after delay");
+                Debug.Log("[EmergencyStopHandler] Reactivated Fixers");
             }
             catch (System.Exception ex)
             {
@@ -3198,6 +3659,151 @@ namespace IoTDashboard
             catch (System.Exception ex)
             {
                 Debug.LogError($"[EmergencyStopHandler] Error in RestoreDriveAndAxisStates: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// Restores drive and axis states PROPERLY:
+        /// - For drives with Drive_Simple: Only restore speed, let PLC signal chain control JogForward
+        /// - For drives doing target movement (DriveTo): Resume via DriveTo()
+        /// - For standalone drives (no Drive_Simple): Restore JogForward directly
+        /// This ensures the system resumes exactly where it was stopped!
+        /// </summary>
+        private void RestoreDriveStatesProper()
+        {
+            try
+            {
+                int restoredCount = 0;
+                int plcControlledCount = 0;
+                int targetMovementCount = 0;
+                int standaloneCount = 0;
+                
+                // Get Drive type for reflection
+                Type driveType = typeof(Drive);
+                FieldInfo lastJogField = driveType.GetField("_lastjog", BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo isStoppedField = driveType.GetField("IsStopped", BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo stopDriveField = driveType.GetField("_StopDrive", BindingFlags.NonPublic | BindingFlags.Instance);
+                
+                // Restore drive states
+                for (int i = 0; i < allDrives.Count; i++)
+                {
+                    Drive drive = allDrives[i];
+                    if (drive == null || drive.gameObject == null)
+                        continue;
+                    
+                    try
+                    {
+                        // Check if this drive is controlled by Drive_Simple (PLC signal chain)
+                        Drive_Simple driveSimple = drive.GetComponent<Drive_Simple>();
+                        bool isPLCControlled = (driveSimple != null);
+                        
+                        // Get stored state
+                        var state = stateStorage.GetState<ComponentStateStorage.DriveState>(drive.gameObject.name);
+                        
+                        if (state != null)
+                        {
+                            // ALWAYS restore speed parameters - critical for all drives!
+                            drive.TargetSpeed = state.targetSpeed;
+                            drive.SpeedOverride = state.speedOverride;
+                            
+                            // Check if drive was doing target-based movement (DriveTo)
+                            if (state.wasIsDrivingToTarget)
+                            {
+                                // Drive was actively moving to a target position
+                                // Use DriveTo() which properly sets all internal flags
+                                drive.DriveTo(state.currentDestination);
+                                Debug.Log($"[EmergencyStopHandler] Resumed ACTIVE drive {drive.gameObject.name} via DriveTo({state.currentDestination}) from pos {state.currentPosition}");
+                                targetMovementCount++;
+                                restoredCount++;
+                            }
+                            else if (isPLCControlled)
+                            {
+                                // Drive is controlled by PLC via Drive_Simple
+                                // DO NOT set JogForward - let the signal chain handle it!
+                                // Just restore target position in case it's needed
+                                drive.TargetPosition = state.targetPosition;
+                                Debug.Log($"[EmergencyStopHandler] PLC-controlled drive {drive.gameObject.name}: Speed={state.targetSpeed}, letting signal chain control JogForward");
+                                plcControlledCount++;
+                                restoredCount++;
+                            }
+                            else if (state.wasJogForward || state.wasJogBackward)
+                            {
+                                // Standalone drive that was jogging - restore jog flags directly
+                                // Prepare internal state
+                                if (lastJogField != null)
+                                    lastJogField.SetValue(drive, false);
+                                if (isStoppedField != null)
+                                    isStoppedField.SetValue(drive, false);
+                                if (stopDriveField != null)
+                                    stopDriveField.SetValue(drive, false);
+                                
+                                // Set jog flags directly
+                                drive.JogForward = state.wasJogForward;
+                                drive.JogBackward = state.wasJogBackward;
+                                Debug.Log($"[EmergencyStopHandler] Standalone JOG drive {drive.gameObject.name}: JogF={state.wasJogForward}, JogB={state.wasJogBackward}");
+                                standaloneCount++;
+                                restoredCount++;
+                            }
+                            else
+                            {
+                                // Drive was stopped - just restore parameters
+                                drive.TargetPosition = state.targetPosition;
+                                Debug.Log($"[EmergencyStopHandler] Restored STOPPED drive {drive.gameObject.name}");
+                                restoredCount++;
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"[EmergencyStopHandler] Error restoring drive state for {drive.gameObject.name}: {ex.Message}");
+                    }
+                }
+                
+                // Restore axis states (axes use target-based movement, not jog)
+                for (int i = 0; i < allAxes.Count; i++)
+                {
+                    Axis axis = allAxes[i];
+                    if (axis == null || axis.gameObject == null)
+                        continue;
+                    
+                    try
+                    {
+                        Drive axisDrive = axis.GetComponent<Drive>();
+                        if (axisDrive != null)
+                        {
+                            var state = stateStorage.GetState<ComponentStateStorage.AxisState>(axis.gameObject.name);
+                            if (state != null)
+                            {
+                                // Check if axis was ACTUALLY moving to target
+                                if (state.wasIsDrivingToTarget)
+                                {
+                                    // Axis was actively moving - use DriveTo()
+                                    axisDrive.DriveTo(state.currentDestination);
+                                    Debug.Log($"[EmergencyStopHandler] Resumed ACTIVE axis {axis.gameObject.name} via DriveTo({state.currentDestination})");
+                                    targetMovementCount++;
+                                    restoredCount++;
+                                }
+                                else
+                                {
+                                    // Axis was not actively moving - just restore position
+                                    axisDrive.TargetPosition = state.targetPosition;
+                                    Debug.Log($"[EmergencyStopHandler] Restored axis {axis.gameObject.name} to position {state.targetPosition}");
+                                    restoredCount++;
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"[EmergencyStopHandler] Error restoring axis state for {axis.gameObject.name}: {ex.Message}");
+                    }
+                }
+                
+                Debug.Log($"[EmergencyStopHandler] RestoreDriveStatesProper completed: {restoredCount} total, {plcControlledCount} PLC-controlled, {targetMovementCount} target-based, {standaloneCount} standalone");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[EmergencyStopHandler] Error in RestoreDriveStatesProper: {ex.Message}");
             }
         }
         

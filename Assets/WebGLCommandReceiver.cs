@@ -30,10 +30,13 @@ namespace IoTDashboard
         public int MaxRetries = 3;
         
         private Queue<Command> commandQueue = new Queue<Command>();
+        private Queue<Command> emergencyQueue = new Queue<Command>();
+        private bool emergencyProcessing = false;
         private bool isProcessing = false;
         private Dictionary<string, ComponentController> controllers = new Dictionary<string, ComponentController>();
         private WebGLIoTMonitor iotMonitor;
         private float lastPollTime = 0f;
+        private bool isPollingCommands = false;
         
         void Start()
         {
@@ -56,7 +59,7 @@ namespace IoTDashboard
         void Update()
         {
             // Poll for commands periodically (real-time - every 50ms)
-            if (Time.time - lastPollTime >= PollInterval)
+            if (!isPollingCommands && Time.time - lastPollTime >= PollInterval)
             {
                 lastPollTime = Time.time;
                 StartCoroutine(PollForCommands());
@@ -66,7 +69,7 @@ namespace IoTDashboard
             // Process multiple commands if queue is building up
             int maxProcessPerFrame = 3; // Process up to 3 commands per frame for real-time
             int processed = 0;
-            while (!isProcessing && commandQueue.Count > 0 && processed < maxProcessPerFrame)
+            while (!emergencyProcessing && !isProcessing && commandQueue.Count > 0 && processed < maxProcessPerFrame)
             {
                 ProcessNextCommand();
                 processed++;
@@ -103,13 +106,18 @@ namespace IoTDashboard
         
         private IEnumerator PollForCommands()
         {
+            if (isPollingCommands)
+                yield break;
+            
+            isPollingCommands = true;
             string url = ApiBaseUrl + "/api/commands/pending";
+            
+            try
+            {
             using (UnityEngine.Networking.UnityWebRequest request = 
                 UnityEngine.Networking.UnityWebRequest.Get(url))
             {
-                // Set timeout for faster response
                 request.timeout = 5;
-                
                 yield return request.SendWebRequest();
                 
                 if (request.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
@@ -118,7 +126,6 @@ namespace IoTDashboard
                     {
                         string jsonResponse = request.downloadHandler.text;
                         
-                        // Handle empty response
                         if (string.IsNullOrEmpty(jsonResponse) || jsonResponse.Trim() == "{}")
                         {
                             yield break;
@@ -130,30 +137,25 @@ namespace IoTDashboard
                         {
                             Debug.Log($"[WebGLCommandReceiver] Received {response.commands.Length} command(s) from backend");
                             
-                            // Process emergency commands first (priority) - IMMEDIATELY, don't queue
-                            System.Collections.Generic.List<Command> emergencyCommands = new System.Collections.Generic.List<Command>();
                             System.Collections.Generic.List<Command> normalCommands = new System.Collections.Generic.List<Command>();
                             
                             for (int i = 0; i < response.commands.Length; i++)
                             {
                                 Command cmd = response.commands[i];
                                 
-                                // Null check
                                 if (cmd == null)
                                 {
                                     Debug.LogWarning($"[WebGLCommandReceiver] Command at index {i} is null, skipping");
                                     continue;
                                 }
                                 
-                                // Check if emergency using helper method (with null safety)
                                 try
                                 {
                                     if (cmd.IsEmergency() || 
                                         (!string.IsNullOrEmpty(cmd.parameter) && cmd.parameter.Contains("Emergency")) ||
                                         (cmd.componentId == "all" && !string.IsNullOrEmpty(cmd.parameter)))
                                     {
-                                        emergencyCommands.Add(cmd);
-                                        Debug.Log($"[WebGLCommandReceiver] Identified emergency command: {cmd.commandId ?? "null"}, param={cmd.parameter ?? "null"}");
+                                            emergencyQueue.Enqueue(cmd);
                                     }
                                     else
                                     {
@@ -163,37 +165,15 @@ namespace IoTDashboard
                                 catch (System.Exception ex)
                                 {
                                     Debug.LogError($"[WebGLCommandReceiver] Error checking command type: {ex.Message}");
-                                    // Add to normal commands as fallback
                                     normalCommands.Add(cmd);
                                 }
                             }
                             
-                            // Process emergency commands IMMEDIATELY (don't queue, process directly)
-                            for (int i = 0; i < emergencyCommands.Count; i++)
-                            {
-                                Command cmd = emergencyCommands[i];
-                                
-                                if (cmd == null)
+                                if (emergencyQueue.Count > 0 && !emergencyProcessing)
                                 {
-                                    Debug.LogWarning($"[WebGLCommandReceiver] Emergency command at index {i} is null, skipping");
-                                    continue;
+                                    StartCoroutine(ProcessEmergencyCommands());
                                 }
                                 
-                                try
-                                {
-                                    Debug.Log($"[WebGLCommandReceiver] ========== PROCESSING EMERGENCY COMMAND IMMEDIATELY ==========");
-                                    Debug.Log($"[WebGLCommandReceiver] Command ID: {cmd.commandId ?? "null"}");
-                                    
-                                    // Process emergency command directly, bypassing queue
-                                    StartCoroutine(ExecuteCommand(cmd));
-                                }
-                                catch (System.Exception ex)
-                                {
-                                    Debug.LogError($"[WebGLCommandReceiver] Error starting emergency command coroutine: {ex.Message}");
-                                }
-                            }
-                            
-                            // Queue normal commands for normal processing
                             for (int i = 0; i < normalCommands.Count; i++)
                             {
                                 Command cmd = normalCommands[i];
@@ -214,10 +194,6 @@ namespace IoTDashboard
                                 }
                             }
                         }
-                        else
-                        {
-                            // No commands - this is normal
-                        }
                     }
                     catch (System.Exception ex)
                     {
@@ -226,13 +202,17 @@ namespace IoTDashboard
                 }
                 else if (request.responseCode == 404)
                 {
-                    // 404 means no commands - this is normal, don't log
+                        // normal - nothing queued
                 }
                 else if (request.result != UnityEngine.Networking.UnityWebRequest.Result.ProtocolError)
                 {
-                    // Log other errors
                     Debug.LogWarning($"[WebGLCommandReceiver] Error polling commands: {request.error} (Code: {request.responseCode})");
                 }
+                }
+            }
+            finally
+            {
+                isPollingCommands = false;
             }
         }
         
@@ -264,7 +244,7 @@ namespace IoTDashboard
         
         private void ProcessNextCommand()
         {
-            if (isProcessing || commandQueue.Count == 0)
+            if (emergencyProcessing || isProcessing || commandQueue.Count == 0)
                 return;
             
             try
@@ -289,14 +269,34 @@ namespace IoTDashboard
             }
         }
         
-        private IEnumerator ExecuteCommand(Command command)
+        private IEnumerator ProcessEmergencyCommands()
+        {
+            if (emergencyProcessing)
+                yield break;
+            
+            emergencyProcessing = true;
+            
+            while (emergencyQueue.Count > 0)
+            {
+                Command cmd = emergencyQueue.Dequeue();
+                if (cmd == null)
+                    continue;
+                
+                isProcessing = true;
+                yield return ExecuteCommand(cmd, true);
+            }
+            
+            emergencyProcessing = false;
+            ProcessNextCommand();
+        }
+        
+        private IEnumerator ExecuteCommand(Command command, bool skipQueueAdvance = false)
         {
             // Null check
             if (command == null)
             {
                 Debug.LogError("[WebGLCommandReceiver] Cannot execute null command");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -324,8 +324,7 @@ namespace IoTDashboard
                     SendErrorResponse(command, $"Resume error: {ex.Message}");
                 }
                 
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -444,18 +443,17 @@ namespace IoTDashboard
                     Debug.LogError($"[WebGLCommandReceiver] Emergency stop FAILED: {emergencyError}");
                 }
                 
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
-            // Check emergency stop (block all non-emergency commands when halted)
-            if (EmergencyStopHandler.IsHalted && !command.IsEmergency())
+            // Check control mode - block non-emergency commands when not in Manual mode
+            if (!EmergencyStopHandler.AreCommandsAllowed && !command.IsEmergency())
             {
-                Debug.LogWarning($"[WebGLCommandReceiver] Command blocked - Production is halted: {command.commandId}");
-                SendErrorResponse(command, "Production is halted. Resume production before sending commands.");
-                isProcessing = false;
-                ProcessNextCommand();
+                string modeStatus = EmergencyStopHandler.GetModeStatus();
+                Debug.LogWarning($"[WebGLCommandReceiver] Command blocked - {modeStatus}: {command.commandId}");
+                SendErrorResponse(command, $"Commands blocked: {modeStatus}");
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -464,8 +462,7 @@ namespace IoTDashboard
             {
                 Debug.LogError("[WebGLCommandReceiver] Command has null or empty componentId");
                 SendErrorResponse(command, "Invalid component ID");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -478,8 +475,7 @@ namespace IoTDashboard
                 {
                     Debug.LogWarning($"[WebGLCommandReceiver] Component not found: {command.componentId}");
                     SendErrorResponse(command, "Component not found");
-                    isProcessing = false;
-                    ProcessNextCommand();
+                    CompleteCommand(skipQueueAdvance);
                     yield break;
                 }
             }
@@ -490,8 +486,7 @@ namespace IoTDashboard
             {
                 Debug.LogError($"[WebGLCommandReceiver] Controller is null for component: {command.componentId}");
                 SendErrorResponse(command, "Controller not initialized");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -505,8 +500,7 @@ namespace IoTDashboard
             {
                 Debug.LogError($"[WebGLCommandReceiver] Error parsing command value: {ex.Message}");
                 SendErrorResponse(command, $"Error parsing value: {ex.Message}");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -520,16 +514,14 @@ namespace IoTDashboard
             {
                 Debug.LogError($"[WebGLCommandReceiver] Error validating parameter: {ex.Message}");
                 SendErrorResponse(command, $"Validation error: {ex.Message}");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
             if (!isValid)
             {
                 SendErrorResponse(command, "Parameter validation failed");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -543,8 +535,7 @@ namespace IoTDashboard
             {
                 Debug.LogError($"[WebGLCommandReceiver] Error setting parameter: {ex.Message}");
                 SendErrorResponse(command, $"Error: {ex.Message}");
-                isProcessing = false;
-                ProcessNextCommand();
+                CompleteCommand(skipQueueAdvance);
                 yield break;
             }
             
@@ -558,8 +549,16 @@ namespace IoTDashboard
                 SendErrorResponse(command, "Failed to apply command");
             }
             
+            CompleteCommand(skipQueueAdvance);
+        }
+        
+        private void CompleteCommand(bool skipQueueAdvance)
+        {
             isProcessing = false;
+            if (!skipQueueAdvance)
+            {
             ProcessNextCommand();
+            }
         }
         
         private void SendSuccessResponse(Command command, ComponentState state)

@@ -18,6 +18,7 @@ namespace IoTDashboard
         public float Value;
         public string Unit;
         public Color StatusColor;
+        public Dictionary<string, object> Metadata;
         
         // Component-specific data
         public Sensor Sensor;
@@ -48,6 +49,7 @@ namespace IoTDashboard
             ParentRobot = null;
             IsRobotAxis = false;
             IsRobotGrip = false;
+            Metadata = new Dictionary<string, object>();
         }
         
         public void AddValueToHistory(float val)

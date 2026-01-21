@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace IoTDashboard
@@ -130,6 +131,19 @@ namespace IoTDashboard
                 json.Append($"\"isRobotAxis\":{comp.IsRobotAxis.ToString().ToLower()},");
                 json.Append($"\"isRobotGrip\":{comp.IsRobotGrip.ToString().ToLower()},");
                 json.Append($"\"timestamp\":\"{System.DateTime.UtcNow.ToString("o")}\"");
+                
+                if (comp.Metadata != null && comp.Metadata.Count > 0)
+                {
+                    json.Append(",\"metadata\":{");
+                    bool firstMeta = true;
+                    foreach (var kvp in comp.Metadata)
+                    {
+                        if (!firstMeta) json.Append(",");
+                        firstMeta = false;
+                        json.Append($"\"{EscapeJson(kvp.Key)}\":{SerializeMetadataValue(kvp.Value)}");
+                    }
+                    json.Append("}");
+                }
                 json.Append("}");
             }
             
@@ -150,6 +164,30 @@ namespace IoTDashboard
             if (string.IsNullOrEmpty(str))
                 return "";
             return str.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
+        }
+        
+        private string SerializeMetadataValue(object value)
+        {
+            if (value == null)
+            {
+                return "null";
+            }
+            
+            switch (value)
+            {
+                case bool boolVal:
+                    return boolVal.ToString().ToLower();
+                case int intVal:
+                    return intVal.ToString();
+                case float floatVal:
+                    return floatVal.ToString(CultureInfo.InvariantCulture);
+                case double doubleVal:
+                    return doubleVal.ToString(CultureInfo.InvariantCulture);
+                case string strVal:
+                    return $"\"{EscapeJson(strVal)}\"";
+                default:
+                    return $"\"{EscapeJson(value.ToString())}\"";
+            }
         }
     }
 }

@@ -182,6 +182,14 @@ namespace IoTDashboard
                     continue;
                 
                 component.IsActive = component.ComponentObject.activeInHierarchy;
+                if (component.Metadata == null)
+                {
+                    component.Metadata = new Dictionary<string, object>();
+                }
+                else
+                {
+                    component.Metadata.Clear();
+                }
                 
                 // Update based on component type
                 switch (component.ComponentType)
@@ -208,6 +216,8 @@ namespace IoTDashboard
                         UpdateSink(component);
                         break;
                 }
+                
+                StampCommonMetadata(component);
             }
             
             OnComponentsUpdated?.Invoke(allComponents);
@@ -287,11 +297,42 @@ namespace IoTDashboard
         {
             if (data.Source == null) return;
             
-            data.Status = data.Source.Enabled ? "Active" : "Inactive";
-            data.Value = data.Source.Enabled ? 1f : 0f;
-            data.Unit = "State";
-            data.StatusColor = data.Source.Enabled ? Color.green : Color.gray;
+            bool plcGenerateBound = data.Source.SourceGenerate != null;
+            bool plcDistanceBound = data.Source.SourceGenerateOnDistance != null;
+            bool automatic = data.Source.AutomaticGeneration;
+            bool plcGenerateActive = plcGenerateBound && data.Source.SourceGenerate.Value;
+            bool plcDistanceActive = plcDistanceBound && data.Source.SourceGenerateOnDistance.Value;
+            
+            string status = automatic ? "Auto Distance" : "Manual";
+            if (plcGenerateBound)
+            {
+                status += plcGenerateActive ? " | PLC Demand" : " | PLC Idle";
+            }
+            if (data.Source.GenerateMU)
+            {
+                status += " | Manual Pulse";
+            }
+            
+            data.Status = status;
+            data.Value = data.Source.Created;
+            data.Unit = data.Source.LimitNumber ? $"Created / Max {data.Source.MaxNumberMUs}" : "MUs Created";
+            data.StatusColor = automatic ? (plcDistanceActive ? Color.cyan : Color.green) : (plcGenerateActive ? Color.yellow : Color.gray);
             data.AddValueToHistory(data.Value);
+            
+            if (data.Metadata == null)
+            {
+                data.Metadata = new System.Collections.Generic.Dictionary<string, object>();
+            }
+            data.Metadata["enabled"] = data.Source.Enabled;
+            data.Metadata["automaticGeneration"] = automatic;
+            data.Metadata["manualPulse"] = data.Source.GenerateMU;
+            data.Metadata["plcGenerateBound"] = plcGenerateBound;
+            data.Metadata["plcGenerateActive"] = plcGenerateActive;
+            data.Metadata["plcDistanceBound"] = plcDistanceBound;
+            data.Metadata["plcDistanceActive"] = plcDistanceActive;
+            data.Metadata["createdCount"] = data.Source.Created;
+            data.Metadata["limitNumber"] = data.Source.LimitNumber;
+            data.Metadata["maxMUs"] = data.Source.MaxNumberMUs;
         }
         
         private void UpdateSink(IoTComponentData data)
@@ -303,6 +344,27 @@ namespace IoTDashboard
             data.Unit = "State";
             data.StatusColor = Color.green;
             data.AddValueToHistory(data.Value);
+        }
+        
+        private void StampCommonMetadata(IoTComponentData data)
+        {
+            if (data.Metadata == null)
+            {
+                data.Metadata = new Dictionary<string, object>();
+            }
+            
+            bool isGameObjectActive = data.ComponentObject != null && data.ComponentObject.activeSelf;
+            bool manualOffline = !isGameObjectActive;
+            
+            data.Metadata["lastHeartbeat"] = System.DateTime.UtcNow.ToString("o");
+            data.Metadata["isOnline"] = data.IsActive;
+            data.Metadata["manualOffline"] = manualOffline;
+            data.Metadata["status"] = data.Status ?? string.Empty;
+            data.Metadata["value"] = data.Value;
+            data.Metadata["unit"] = data.Unit ?? string.Empty;
+            data.Metadata["componentType"] = data.ComponentType ?? string.Empty;
+            data.Metadata["category"] = data.Category ?? "other";
+            data.Metadata["heartbeatIntervalMs"] = (int)(UpdateInterval * 1000f);
         }
         
         /// <summary>

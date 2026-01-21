@@ -72,6 +72,11 @@ namespace IoTDashboard
             // Source parameters
             var sourceParams = new Dictionary<string, ParameterDefinition>();
             sourceParams["Enabled"] = new ParameterDefinition("Enabled", "boolean", 0, 1, "", true);
+            sourceParams["GenerateMU"] = new ParameterDefinition("GenerateMU", "boolean", 0, 1, "", true);
+            sourceParams["DeleteAllMU"] = new ParameterDefinition("DeleteAllMU", "boolean", 0, 1, "", true);
+            sourceParams["AutomaticGeneration"] = new ParameterDefinition("AutomaticGeneration", "boolean", 0, 1, "", true);
+            sourceParams["SourceGenerate"] = new ParameterDefinition("SourceGenerate", "boolean", 0, 1, "", true);
+            sourceParams["SourceGenerateOnDistance"] = new ParameterDefinition("SourceGenerateOnDistance", "boolean", 0, 1, "", true);
             definitions["Source"] = sourceParams;
             
             // Grip parameters

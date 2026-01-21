@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using realvirtual;
 
@@ -71,22 +73,35 @@ namespace IoTDashboard
         
         /// <summary>
         /// Sets a parameter value on the component
-        /// CRITICAL: Blocks all parameter changes when emergency stop is active
+        /// CRITICAL: Blocks commands based on current control mode
+        /// - EmergencyStopped: All commands blocked (except Resume)
+        /// - PlcRecovery: All commands blocked (PLC is restoring states)
+        /// - Manual: Commands allowed and persist until changed
         /// </summary>
         public bool SetParameter(string parameterName, object value)
         {
-            // CRITICAL: Check emergency stop state - block ALL parameter changes when halted
-            if (EmergencyStopHandler.IsHalted)
+            // Allow Resume command in any state
+            if (parameterName == "ResumeProduction" || parameterName == "Resume")
             {
-                // Allow only ResumeProduction command
-                if (parameterName == "ResumeProduction" || parameterName == "Resume")
-                {
-                    // This is handled by WebGLCommandReceiver, but allow it here too
-                    return true;
-                }
-                
-                Debug.LogWarning($"[ComponentController] Parameter change blocked - Production is HALTED. Component: {componentData.ComponentName}, Parameter: {parameterName}");
-                return false;
+                // This is handled by WebGLCommandReceiver
+                return true;
+            }
+            
+            // Check control mode state
+            switch (EmergencyStopHandler.CurrentMode)
+            {
+                case ControlMode.EmergencyStopped:
+                    Debug.LogWarning($"[ComponentController] Command blocked - EMERGENCY STOPPED. Component: {componentData.ComponentName}, Parameter: {parameterName}");
+                    return false;
+                    
+                case ControlMode.PlcRecovery:
+                    float timeRemaining = EmergencyStopHandler.PlcRecoveryTimeRemaining;
+                    Debug.LogWarning($"[ComponentController] Command blocked - PLC RECOVERY in progress ({timeRemaining:F1}s remaining). Component: {componentData.ComponentName}, Parameter: {parameterName}");
+                    return false;
+                    
+                case ControlMode.Manual:
+                    // Commands allowed - continue below
+                    break;
             }
             
             if (!ValidateParameter(parameterName, value))
@@ -124,12 +139,7 @@ namespace IoTDashboard
         {
             if (componentData.Drive == null) return false;
             
-            // Emergency stop check is already done in SetParameter, but double-check for safety
-            if (EmergencyStopHandler.IsHalted)
-            {
-                Debug.LogWarning($"[ComponentController] Cannot set {parameterName} - Production is halted");
-                return false;
-            }
+            // Mode check is already done in SetParameter
             
             try
             {
@@ -142,28 +152,33 @@ namespace IoTDashboard
                         return true;
                     case "JogForward":
                         bool jogForward = System.Convert.ToBoolean(value);
+                        
+                        // Set JogForward - PLC via Drive_Simple may override this based on sensor state
+                        // This is CORRECT behavior: PLC controls start/stop, user controls speed
                         componentData.Drive.JogForward = jogForward;
                         if (jogForward) 
                         {
                             componentData.Drive.JogBackward = false;
-                            Debug.Log($"[ComponentController] Started {componentData.ComponentName} forward");
+                            Debug.Log($"[ComponentController] Set {componentData.ComponentName} JogForward=true (PLC may override based on sensor)");
                         }
                         else
                         {
-                            Debug.Log($"[ComponentController] Stopped {componentData.ComponentName} forward");
+                            Debug.Log($"[ComponentController] Set {componentData.ComponentName} JogForward=false");
                         }
                         return true;
                     case "JogBackward":
                         bool jogBackward = System.Convert.ToBoolean(value);
+                        
+                        // Set JogBackward - PLC via Drive_Simple may override this based on sensor state
                         componentData.Drive.JogBackward = jogBackward;
                         if (jogBackward) 
                         {
                             componentData.Drive.JogForward = false;
-                            Debug.Log($"[ComponentController] Started {componentData.ComponentName} backward");
+                            Debug.Log($"[ComponentController] Set {componentData.ComponentName} JogBackward=true (PLC may override based on sensor)");
                         }
                         else
                         {
-                            Debug.Log($"[ComponentController] Stopped {componentData.ComponentName} backward");
+                            Debug.Log($"[ComponentController] Set {componentData.ComponentName} JogBackward=false");
                         }
                         return true;
                     case "TargetPosition":
@@ -261,17 +276,51 @@ namespace IoTDashboard
         {
             if (componentData.Source == null) return false;
             
-            // CRITICAL: Block source enabling when halted
-            if (EmergencyStopHandler.IsHalted && parameterName == "Enabled" && System.Convert.ToBoolean(value) == true)
-            {
-                Debug.LogWarning($"[ComponentController] Cannot enable source - Production is halted");
-                return false;
-            }
+            // Mode check is already done in SetParameter
             
             switch (parameterName)
             {
                 case "Enabled":
                     componentData.Source.Enabled = System.Convert.ToBoolean(value);
+                    return true;
+                case "GenerateMU":
+                    if (System.Convert.ToBoolean(value))
+                    {
+                        TriggerSourceGeneratePulse();
+                    }
+                    return true;
+                case "DeleteAllMU":
+                    if (System.Convert.ToBoolean(value))
+                    {
+                        TriggerSourceDeleteAllPulse();
+                    }
+                    return true;
+                case "AutomaticGeneration":
+                    bool auto = System.Convert.ToBoolean(value);
+                    if (componentData.Source.SourceGenerateOnDistance != null)
+                    {
+                        componentData.Source.SourceGenerateOnDistance.Value = auto;
+                    }
+                    else
+                    {
+                        componentData.Source.AutomaticGeneration = auto;
+                    }
+                    return true;
+                case "SourceGenerate":
+                    if (componentData.Source.SourceGenerate != null)
+                    {
+                        componentData.Source.SourceGenerate.Value = System.Convert.ToBoolean(value);
+                        return true;
+                    }
+                    componentData.Source.GenerateMU = System.Convert.ToBoolean(value);
+                    return true;
+                case "SourceGenerateOnDistance":
+                    if (componentData.Source.SourceGenerateOnDistance != null)
+                    {
+                        componentData.Source.SourceGenerateOnDistance.Value = System.Convert.ToBoolean(value);
+                        return true;
+                    }
+                    componentData.Source.AutomaticGeneration = System.Convert.ToBoolean(value);
                     return true;
                 default:
                     return false;
@@ -314,12 +363,7 @@ namespace IoTDashboard
         {
             if (componentData.Axis == null) return false;
             
-            // CRITICAL: Block axis movement when halted (except Enable/Disable)
-            if (EmergencyStopHandler.IsHalted && parameterName != "Enabled" && parameterName != "Enable")
-            {
-                Debug.LogWarning($"[ComponentController] Cannot set {parameterName} - Production is halted");
-                return false;
-            }
+            // Mode check is already done in SetParameter
             
             switch (parameterName)
             {
@@ -389,6 +433,110 @@ namespace IoTDashboard
                     }
                 default:
                     return null;
+            }
+        }
+        
+        #region Source Helpers
+        private const float SourcePulseResetDelay = 0.25f;
+        
+        private void TriggerSourceGeneratePulse()
+        {
+            if (componentData.Source.SourceGenerate != null)
+            {
+                componentData.Source.SourceGenerate.Value = true;
+                StartCoroutine(ResetSourceFlag(() =>
+                {
+                    if (componentData?.Source?.SourceGenerate != null)
+                        componentData.Source.SourceGenerate.Value = false;
+                }));
+            }
+            else
+            {
+                componentData.Source.GenerateMU = true;
+                StartCoroutine(ResetSourceFlag(() =>
+                {
+                    if (componentData?.Source != null)
+                        componentData.Source.GenerateMU = false;
+                }));
+            }
+        }
+        
+        private void TriggerSourceDeleteAllPulse()
+        {
+            componentData.Source.DeleteAll();
+            componentData.Source.DeleteAllMU = true;
+            StartCoroutine(ResetSourceFlag(() =>
+            {
+                if (componentData?.Source != null)
+                    componentData.Source.DeleteAllMU = false;
+            }));
+        }
+        
+        private IEnumerator ResetSourceFlag(Action resetAction)
+        {
+            yield return new WaitForSeconds(SourcePulseResetDelay);
+            resetAction?.Invoke();
+        }
+        #endregion
+        
+        /// <summary>
+        /// Blocks the Drive_Simple behavior for a drive to prevent PLC signals from overriding manual commands.
+        /// This makes manual dashboard commands PERSIST until changed by another command.
+        /// When Drive_Simple.ForceStop = true, it won't pass PLC signals to Drive.JogForward.
+        /// </summary>
+        private void BlockDriveSimpleForComponent(realvirtual.Drive drive)
+        {
+            if (drive == null || drive.gameObject == null)
+                return;
+            
+            try
+            {
+                // Find Drive_Simple on the same GameObject or parent
+                realvirtual.Drive_Simple driveSimple = drive.GetComponent<realvirtual.Drive_Simple>();
+                if (driveSimple == null)
+                {
+                    driveSimple = drive.GetComponentInParent<realvirtual.Drive_Simple>();
+                }
+                
+                if (driveSimple != null)
+                {
+                    // Block Drive_Simple from overriding our manual command
+                    driveSimple.ForceStop = true;
+                    Debug.Log($"[ComponentController] Blocked Drive_Simple for {drive.gameObject.name} - manual command will persist");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[ComponentController] Could not block Drive_Simple: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// Unblocks the Drive_Simple behavior for a drive to allow PLC signals to control it again.
+        /// Call this when you want to return control to the PLC.
+        /// </summary>
+        private void UnblockDriveSimpleForComponent(realvirtual.Drive drive)
+        {
+            if (drive == null || drive.gameObject == null)
+                return;
+            
+            try
+            {
+                realvirtual.Drive_Simple driveSimple = drive.GetComponent<realvirtual.Drive_Simple>();
+                if (driveSimple == null)
+                {
+                    driveSimple = drive.GetComponentInParent<realvirtual.Drive_Simple>();
+                }
+                
+                if (driveSimple != null)
+                {
+                    driveSimple.ForceStop = false;
+                    Debug.Log($"[ComponentController] Unblocked Drive_Simple for {drive.gameObject.name} - PLC control restored");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[ComponentController] Could not unblock Drive_Simple: {ex.Message}");
             }
         }
         
