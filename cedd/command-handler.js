@@ -5,15 +5,6 @@ let selectedComponent = null;
 // Send control command to component (real-time)
 async function sendCommand(componentId, parameter, value) {
     try {
-        // Check if production is halted
-        const statusResponse = await fetch(`${API_CONFIG.baseUrl}/api/emergency/status`);
-        if (statusResponse.ok) {
-            const statusData = await statusResponse.json();
-            if (statusData.success && statusData.active) {
-                throw new Error('Production is halted. Resume production before sending commands.');
-            }
-        }
-        
         const url = `${API_CONFIG.baseUrl}/api/components/${encodeURIComponent(componentId)}/control`;
         
         const response = await fetch(url, {
@@ -29,18 +20,15 @@ async function sendCommand(componentId, parameter, value) {
             })
         });
         
-        if (!response.ok) {
-            const errorData = await response.json();
-            const errorMsg = errorData.error?.message || errorData.error?.code || `HTTP ${response.status}`;
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+            const errorMsg = result?.error?.message || result?.error || `HTTP ${response.status}`;
             throw new Error(errorMsg);
         }
         
-        const result = await response.json();
+        console.log(`[Command] Sent: ${componentId}.${parameter} = ${value} (ID: ${result.commandId})`);
         
-        if (result.success) {
-            console.log(`[Command] Sent: ${componentId}.${parameter} = ${value} (ID: ${result.commandId})`);
-            
-            // Refresh component data after command to see updated state
             setTimeout(() => {
                 if (typeof refreshData === 'function') {
                     refreshData();
@@ -48,9 +36,6 @@ async function sendCommand(componentId, parameter, value) {
             }, 500);
             
             return { success: true, commandId: result.commandId };
-        } else {
-            throw new Error(result.error?.message || 'Command failed');
-        }
     } catch (error) {
         console.error('[Command] Error:', error);
         // Show user-friendly error message

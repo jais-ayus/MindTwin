@@ -230,18 +230,29 @@ function updateComponents(components) {
         componentCache.set(comp.name, comp);
     });
     
-    container.innerHTML = filteredComponents.map((comp, index) => {
+    container.innerHTML = filteredComponents.map((comp) => {
         const value = typeof comp.value === 'number' ? comp.value.toFixed(2) : comp.value;
         const isSelected = selectedComponent && selectedComponent.name === comp.name;
+        const metadata = comp.metadata || {};
+        const offline = metadata.isOnline === false || metadata.manualOffline === true;
+        const cardClasses = [
+            'component-card',
+            comp.active ? '' : 'inactive',
+            isSelected ? 'selected' : '',
+            offline ? 'offline' : ''
+        ].filter(Boolean).join(' ');
+        const statusFlag = offline ? '<span class="status-flag offline">Offline</span>' : '';
+
         return `
-            <div class="component-card ${comp.active ? '' : 'inactive'} ${isSelected ? 'selected' : ''}" 
-                 onclick="selectComponentByName('${escapeHtml(comp.name)}')">
+            <div class="${cardClasses}" onclick="selectComponentByName('${escapeHtml(comp.name)}')">
                 <div class="component-name">
                     <span class="status-indicator" style="background-color: ${comp.color || '#3498db'}"></span>
                     ${escapeHtml(comp.name || 'Unknown')}
                 </div>
                 <div class="component-type">${escapeHtml(comp.type || 'Unknown')}</div>
-                <div class="component-status">Status: <strong>${escapeHtml(comp.status || 'Unknown')}</strong></div>
+                <div class="component-status">
+                    Status: <strong>${escapeHtml(comp.status || 'Unknown')}</strong> ${statusFlag}
+                </div>
                 <div class="component-value">${value} ${escapeHtml(comp.unit || '')}</div>
             </div>
         `;

@@ -68,7 +68,7 @@ function initCategoryManager() {
     loadCategoryCounts();
 }
 
-// Render category tabs
+// Render category tabs - only shows categories with components (except 'all')
 function renderCategoryTabs() {
     const tabsContainer = document.getElementById('categoryTabs');
     if (!tabsContainer) return;
@@ -79,8 +79,18 @@ function renderCategoryTabs() {
             allComponents.filter(componentCategories[categoryId].filter).length;
     });
     
-    // Render tabs
-    tabsContainer.innerHTML = Object.entries(componentCategories)
+    // Filter out empty categories (except 'all' which always shows)
+    const visibleCategories = Object.entries(componentCategories)
+        .filter(([id, category]) => id === 'all' || category.count > 0);
+    
+    // If current category became empty, switch to 'all'
+    const currentCategoryData = componentCategories[currentCategory];
+    if (currentCategory !== 'all' && currentCategoryData && currentCategoryData.count === 0) {
+        currentCategory = 'all';
+    }
+    
+    // Render tabs - only non-empty categories
+    tabsContainer.innerHTML = visibleCategories
         .map(([id, category]) => `
             <button class="category-tab ${currentCategory === id ? 'active' : ''}" 
                     data-category="${id}"

@@ -1,0 +1,387 @@
+/* HMI Control Panel Styles - Industrial Look */
+
+.hmi-panel {
+    background: linear-gradient(145deg, #d4d4d4 0%, #a8a8a8 50%, #c0c0c0 100%);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    border: 3px solid #888;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.hmi-panel-header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #999;
+}
+
+.hmi-panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.hmi-icon {
+    width: 20px;
+    height: 20px;
+    color: #2c3e50;
+}
+
+.hmi-panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.hmi-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.hmi-control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.hmi-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Emergency Stop Button */
+.hmi-estop {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    background: linear-gradient(145deg, #ffdd00 0%, #cc9900 100%);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    padding: 8px;
+    transition: transform 0.1s ease;
+}
+
+.hmi-estop:hover {
+    transform: scale(1.02);
+}
+
+.hmi-estop:active {
+    transform: scale(0.98);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.estop-button {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.estop-mushroom {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff3333 0%, #cc0000 50%, #990000 100%);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 100, 100, 0.5);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.estop-mushroom::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
+.estop-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #990000;
+    opacity: 0.5;
+}
+
+.hmi-estop.active .estop-mushroom {
+    transform: translateY(3px);
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.5),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 100, 100, 0.5);
+    background: linear-gradient(145deg, #cc0000 0%, #990000 50%, #660000 100%);
+}
+
+.hmi-estop.active {
+    animation: estopPulse 1s ease-in-out infinite;
+}
+
+@keyframes estopPulse {
+    0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(255, 0, 0, 0.4); }
+    50% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 0 10px rgba(255, 0, 0, 0); }
+}
+
+/* Start Button */
+.hmi-start {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #666 0%, #444 100%);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    padding: 5px;
+    transition: all 0.15s ease;
+}
+
+.hmi-start:hover {
+    transform: scale(1.05);
+}
+
+.hmi-start:active {
+    transform: scale(0.95);
+}
+
+.start-button {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #444 0%, #333 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.start-inner {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #228822 0%, #116611 50%, #004400 100%);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(100, 255, 100, 0.3);
+    transition: all 0.2s ease;
+}
+
+.hmi-start.active .start-inner {
+    background: linear-gradient(145deg, #44ff44 0%, #22cc22 50%, #00aa00 100%);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(0, 255, 0, 0.5),
+        inset 0 1px 2px rgba(200, 255, 200, 0.5);
+}
+
+/* Indicator Lights */
+.hmi-indicator {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #555 0%, #333 100%);
+    box-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    position: relative;
+}
+
+.indicator-lens {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.indicator-lens.red {
+    background: linear-gradient(145deg, #662222 0%, #441111 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.indicator-lens.yellow {
+    background: linear-gradient(145deg, #665522 0%, #443311 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.indicator-lens.green {
+    background: linear-gradient(145deg, #226622 0%, #114411 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.indicator-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+/* Active indicator states */
+.hmi-indicator.active .indicator-lens.red {
+    background: linear-gradient(145deg, #ff4444 0%, #cc2222 50%, #aa0000 100%);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 150, 150, 0.5),
+        0 0 20px rgba(255, 0, 0, 0.6);
+}
+
+.hmi-indicator.active .indicator-lens.yellow {
+    background: linear-gradient(145deg, #ffcc44 0%, #ddaa22 50%, #aa8800 100%);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 230, 150, 0.5),
+        0 0 20px rgba(255, 200, 0, 0.6);
+}
+
+.hmi-indicator.active .indicator-lens.green {
+    background: linear-gradient(145deg, #44ff44 0%, #22cc22 50%, #00aa00 100%);
+    box-shadow: 
+        inset 0 1px 2px rgba(150, 255, 150, 0.5),
+        0 0 20px rgba(0, 255, 0, 0.6);
+}
+
+/* Flashing animation for fault light when active */
+.hmi-indicator.active .indicator-lens.red {
+    animation: faultFlash 0.5s ease-in-out infinite;
+}
+
+@keyframes faultFlash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Mode Selector */
+.hmi-mode-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.mode-switch {
+    width: 50px;
+    height: 30px;
+    background: linear-gradient(145deg, #333 0%, #222 100%);
+    border-radius: 4px;
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    position: relative;
+    padding: 3px;
+}
+
+.mode-knob {
+    width: 20px;
+    height: 24px;
+    background: linear-gradient(145deg, #888 0%, #666 50%, #555 100%);
+    border-radius: 3px;
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 3px;
+    transition: left 0.2s ease;
+}
+
+.mode-switch.manual .mode-knob {
+    left: 3px;
+}
+
+.mode-switch.auto .mode-knob {
+    left: 27px;
+}
+
+.mode-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 50px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #666;
+}
+
+.mode-labels span {
+    transition: color 0.2s ease;
+}
+
+.mode-labels span.active {
+    color: #2980b9;
+}
+
+/* Status Bar */
+.hmi-status-bar {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid #999;
+    text-align: center;
+}
+
+.status-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hmi-panel {
+        max-width: 100%;
+    }
+    
+    .hmi-estop {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .estop-mushroom {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+

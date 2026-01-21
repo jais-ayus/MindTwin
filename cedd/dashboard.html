@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IoT Insight Dashboard</title>
+    <title>MINDTWIN - IoT Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="hmi-panel.css">
 </head>
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
-            <h1>🔌 IoT Insight Dashboard</h1>
+            <h1>
+                <a href="landing.html" class="logo-link" title="Back to Landing Page">
+                    <span class="logo-text">MINDTWIN</span>
+                </a>
+                <span class="header-separator">|</span>
+                <span class="header-subtitle">IoT Dashboard</span>
+            </h1>
             <div class="header-controls">
                 <div class="connection-status" id="connectionStatus">
                     <span class="status-dot" id="statusDot"></span>
@@ -46,19 +53,87 @@
                 </div>
             </div>
             
-            <!-- Control Panel -->
-            <div class="control-panel">
-                <h2>Control</h2>
-                <div id="controlContent" class="control-content">
-                    <div class="no-selection">Select a component to control</div>
+            <!-- Right Sidebar -->
+            <div class="sidebar-right">
+                <!-- AI Panel -->
+                <div class="ai-panel" id="aiPanel">
+                    <h2>AI Insights</h2>
+                    <div id="aiStatusContainer" class="ai-status-container">
+                        <div class="ai-status-row">
+                            <span class="ai-status-dot" id="aiStatusDot"></span>
+                            <div>
+                                <div id="aiStatusText" class="ai-status-text">AI service loading...</div>
+                                <div id="aiStatusSubText" class="ai-status-subtext"></div>
+                            </div>
+                        </div>
+                        <div id="aiStatusMeta" class="ai-status-meta"></div>
+                    </div>
+                    <div class="ai-section">
+                        <div class="ai-section-header">
+                            <span>Emergency Alerts</span>
+                            <span class="ai-chip" id="aiOfflineCount">0</span>
+                        </div>
+                        <div id="aiOfflineList" class="ai-list">
+                            <div class="ai-empty">No emergency alerts</div>
+                        </div>
+                    </div>
+                    <div class="ai-section">
+                        <div class="ai-section-header">
+                            <span>Parameter Risk</span>
+                            <span class="ai-chip" id="aiRiskCount">0</span>
+                        </div>
+                        <div id="aiRiskList" class="ai-list">
+                            <div class="ai-empty">No risky parameters</div>
+                        </div>
+                    </div>
+                    <div class="ai-section">
+                        <div class="ai-section-header">
+                            <span>Anomalies</span>
+                            <span class="ai-chip" id="aiAnomalyCount">0</span>
+                        </div>
+                        <div id="aiAnomalyList" class="ai-list">
+                            <div class="ai-empty">No anomalies detected</div>
+                        </div>
+                    </div>
+                    <div class="ai-section">
+                        <div class="ai-section-header">
+                            <span>Predictive Maintenance</span>
+                            <span class="ai-chip" id="aiMaintenanceCount">0</span>
+                        </div>
+                        <div id="aiMaintenanceList" class="ai-list">
+                            <div class="ai-empty">No pending maintenance actions</div>
+                        </div>
+                    </div>
+                    <div class="ai-section">
+                        <div class="ai-section-header">
+                            <span>Optimization</span>
+                            <span class="ai-chip" id="aiOptimizationCount">0</span>
+                        </div>
+                        <div id="aiOptimizationList" class="ai-list">
+                            <div class="ai-empty">No active suggestions</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Status Panel -->
-            <div class="status-panel">
-                <h2>Status</h2>
-                <div id="statusContent" class="status-content">
-                    <div class="no-selection">Select a component for details</div>
+
+                <!-- HMI Control Panel -->
+                <div class="hmi-section">
+                    <div id="hmiPanelContainer"></div>
+                </div>
+                
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <h2>Component Control</h2>
+                    <div id="controlContent" class="control-content">
+                        <div class="no-selection">Select a component to control</div>
+                    </div>
+                </div>
+                
+                <!-- Status Panel -->
+                <div class="status-panel">
+                    <h2>Status</h2>
+                    <div id="statusContent" class="status-content">
+                        <div class="no-selection">Select a component for details</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,7 +142,29 @@
     <script src="category-manager.js"></script>
     <script src="command-handler.js"></script>
     <script src="control-panel.js"></script>
+    <script src="hmi-panel.js"></script>
     <script src="dashboard.js"></script>
+    <script src="ai-panel.js"></script>
+    <script>
+        // Initialize HMI Panel after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof initHMIPanel === 'function') {
+                    initHMIPanel();
+                }
+                if (typeof initAIPanel === 'function') {
+                    initAIPanel();
+                }
+            });
+        } else {
+            if (typeof initHMIPanel === 'function') {
+                initHMIPanel();
+            }
+            if (typeof initAIPanel === 'function') {
+                initAIPanel();
+            }
+        }
+    </script>
 </body>
 </html>
 
